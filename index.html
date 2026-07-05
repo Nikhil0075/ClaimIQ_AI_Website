@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClaimIQ | Agentic Insurance Claims Platform</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="ClaimIQ home">
+      <span class="brand-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="22" height="22" fill="none">
+          <path d="M 27.1 10.9 A 11.5 11.5 0 1 0 27.1 27.1"
+                stroke="white" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </span>
+      <span>ClaimIQ</span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="#architecture">Architecture</a>
+      <a href="claimiq_system_map.html" class="nav-map">System Map<span class="badge-new">LIVE</span></a>
+      <a href="#solution">Solution</a>
+      <a href="#documentation">Docs</a>
+      <a href="#playground">Playground</a>
+      <a href="#impact">Impact</a>
+      <a href="#access">Access</a>
+    </nav>
+    <a class="nav-cta" href="#playground">Try demo</a>
+  </header>
+
+  <main id="home">
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <div class="command-wall">
+          <div class="flow-line"></div>
+          <div class="flow-node mail">Mail</div>
+          <div class="flow-node intake">Intake</div>
+          <div class="flow-node coverage">Policy</div>
+          <div class="flow-node fraud">SIU</div>
+          <div class="flow-node triage">Triage</div>
+          <div class="flow-node copilot">Brief</div>
+          <div class="screen documents"><h3>Claim Documents</h3><span></span><span></span><span></span><span></span></div>
+          <div class="screen risk"><h3>Fraud Risk Signals</h3><div class="dial"></div><p>Identity mismatch</p><p>Duplicate window</p><p>Invoice anomaly</p></div>
+          <div class="screen policy"><h3>Policy Citations</h3><p>Coverage clause</p><p>Waiting period</p><p>Sub-limit check</p></div>
+          <div class="screen triage-card"><h3>Clinical Triage</h3><p class="red">Emergency override</p><p class="amber">Medical review</p><p class="green">Standard queue</p></div>
+          <div class="screen brief"><h3>Adjuster Brief</h3><p>Coverage: needs review</p><p>Fraud: critical</p><p>SLA: 0.25h</p></div>
+        </div>
+      </div>
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <div class="hero-logo-wrap">
+          <img src="logo.svg" alt="ClaimIQ" class="hero-logo">
+        </div>
+        <p class="eyebrow">Track 1 agentic workflow for insurance claims</p>
+        <h1>ClaimIQ turns raw claim emails into <span class="grad-text">human-ready decision briefs.</span></h1>
+        <p class="hero-copy">A session-based agentic pipeline — Gmail inbox to adjuster-ready brief — with a mail guard, an OpenAI-backed router, and five specialist agents for intake, coverage, fraud, clinical triage, and adjuster assistance. Every stage writes an auditable event to BigQuery, stores evidence in Google Drive, and surfaces on a Looker Studio dashboard, while human approval stays mandatory on high-risk claims.</p>
+        <div class="hero-actions">
+          <a class="primary-action" href="#playground">Launch playground</a>
+          <a class="map-action" href="claimiq_system_map.html"><span class="map-action-dot"></span>Explore interactive system map</a>
+          <a class="secondary-action" href="#documentation">Read documentation</a>
+        </div>
+      </div>
+      <div class="hero-metrics" aria-label="ClaimIQ metrics">
+        <div><strong>&lt;2 min</strong><span>email to structured decision brief</span></div>
+        <div><strong>7 stages</strong><span>mail guard + router + 5 specialist agents</span></div>
+        <div><strong>0.25h</strong><span>emergency clinical SLA</span></div>
+      </div>
+    </section>
+
+    <section class="section intro">
+      <div>
+        <p class="section-kicker">The problem</p>
+        <h2>Claims teams are buried in unstructured emails, PDFs, policy wording, fraud risk, and clinical urgency.</h2>
+      </div>
+      <div class="intro-copy">
+        <p>ClaimIQ decomposes the workflow into specialist agents with deterministic fallbacks and guardrails. The demo playground below does not call the private prototype or real services. It mimics the solution behavior so reviewers can understand the agent flow immediately.</p>
+        <p>Insurance claim adjudication is slow because every claim combines customer language, attachments, medical evidence, legal policy clauses, fraud indicators, and routing decisions. ClaimIQ turns that messy front door into a structured, auditable, human-reviewable workflow across motor, health, property, travel, and life claims.</p>
+      </div>
+    </section>
+
+    <section id="solution" class="section solution-section">
+      <div class="section-heading">
+        <p class="section-kicker">Solution approach</p>
+        <h2>ClaimIQ acts like a coordinated expert claims team.</h2>
+        <p>No single model is asked to be a policy lawyer, SIU investigator, clinical reviewer, document analyst, and customer-service writer at the same time. ClaimIQ assigns each responsibility to a focused stage with clear authority limits.</p>
+      </div>
+      <div class="content-grid three">
+        <article class="content-card">
+          <h3>Business transformation</h3>
+          <p>The platform targets the end-to-end insurance claims value chain: intake, document validation, coverage reasoning, fraud scoring, clinical triage, and adjuster decision support.</p>
+          <ul>
+            <li>Reduces manual reading and re-keying from every incoming claim.</li>
+            <li>Standardises extraction and review criteria across adjusters.</li>
+            <li>Turns incomplete submissions into instant structured customer requests.</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Agentic workflow</h3>
+          <p>Each agent receives upstream outputs, adds its own specialist view, writes an auditable result, and passes structured context forward. The pipeline remains dependency-aware instead of becoming a loose chatbot chain.</p>
+          <ul>
+            <li>Mail Guard prevents non-claims from consuming downstream capacity.</li>
+            <li>Intake creates the canonical claim record.</li>
+            <li>Copilot synthesises, but does not approve or deny.</li>
+          </ul>
+        </article>
+        <article class="content-card">
+          <h3>Resilience by design</h3>
+          <p>Every agent has a deterministic fallback. If an LLM call fails, the workflow continues with tagged fallback output so reviewers can see what happened and why.</p>
+          <ul>
+            <li>Immutable fraud score before LLM explanation.</li>
+            <li>Emergency clinical hard overrides.</li>
+            <li>Coverage compliance checks on AI and fallback outputs.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="architecture" class="section">
+      <div class="section-heading">
+        <p class="section-kicker">Architecture</p>
+        <h2>One claim, five connected architecture layers.</h2>
+        <p>ClaimIQ keeps the flow easy to audit: capture the claim, validate it at the front door, preserve state in the orchestrator, route specialist agents, then publish evidence-backed outputs for human review.</p>
+      </div>
+
+      <div class="architecture-flow" aria-label="ClaimIQ end-to-end architecture flow">
+        <article class="architecture-step">
+          <span class="architecture-step-number">01</span>
+          <h3>Claim entry</h3>
+          <p>Claimant email, forms, PDFs, images, and supporting evidence enter through the Gmail channel.</p>
+          <ul>
+            <li>Email body and metadata</li>
+            <li>Attachments and document signals</li>
+          </ul>
+        </article>
+        <article class="architecture-step">
+          <span class="architecture-step-number">02</span>
+          <h3>Front-door guardrails</h3>
+          <p>Validation and Mail Guard separate real claim submissions from enquiries, malformed payloads, and missing evidence.</p>
+          <ul>
+            <li>Required field checks</li>
+            <li>Rewrite request when incomplete</li>
+          </ul>
+        </article>
+        <article class="architecture-step">
+          <span class="architecture-step-number">03</span>
+          <h3>Session orchestration</h3>
+          <p>A versioned ClaimSession owns state, stage status, dependencies, fallback reasons, and audit timings.</p>
+          <ul>
+            <li>Immutable claim context</li>
+            <li>Dependency-aware stage order</li>
+          </ul>
+        </article>
+        <article class="architecture-step">
+          <span class="architecture-step-number">04</span>
+          <h3>Specialist agents</h3>
+          <p>Router selects the needed agents: Intake, Coverage, Fraud/SIU, Triage, and Copilot.</p>
+          <ul>
+            <li>Policy, fraud, and clinical checks</li>
+            <li>Reviewer-ready decision brief</li>
+          </ul>
+        </article>
+        <article class="architecture-step">
+          <span class="architecture-step-number">05</span>
+          <h3>Evidence and review</h3>
+          <p>Outputs land in BigQuery, Drive, Looker Studio, status emails, and the final human approval workflow.</p>
+          <ul>
+            <li>Auditable events and evidence</li>
+            <li>Mandatory review for risk cases</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="architecture-layers" aria-label="Supporting architecture planes">
+        <article class="architecture-layer">
+          <h3>Control plane</h3>
+          <p>Orchestrator, router, mail guard, deterministic fallbacks, and stage dependencies keep the workflow predictable.</p>
+          <div class="architecture-tags">
+            <span>ClaimSession</span>
+            <span>Router</span>
+            <span>Fallbacks</span>
+          </div>
+        </article>
+        <article class="architecture-layer">
+          <h3>Intelligence plane</h3>
+          <p>OpenAI reasoning is used where specialist judgement helps, while deterministic rules protect core policy and risk boundaries.</p>
+          <div class="architecture-tags">
+            <span>gpt-4o-mini</span>
+            <span>o4-mini</span>
+            <span>gpt-5.5</span>
+          </div>
+        </article>
+        <article class="architecture-layer">
+          <h3>Data and audit plane</h3>
+          <p>Structured outputs, evidence files, stage events, and reviewer dashboards remain traceable across the claim lifecycle.</p>
+          <div class="architecture-tags">
+            <span>BigQuery</span>
+            <span>Drive</span>
+            <span>Looker Studio</span>
+          </div>
+        </article>
+      </div>
+
+      <a class="map-cta" href="claimiq_system_map.html" aria-label="Open the ClaimIQ interactive system map">
+        <div class="map-cta-visual" aria-hidden="true">
+          <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="mgGlow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path id="mp1" d="M 30 40 C 100 40, 120 95, 160 95 C 200 95, 220 40, 290 40" fill="none" stroke="#22c55e" stroke-width="1.6" opacity=".8"/>
+            <path id="mp2" d="M 30 95 L 290 95" fill="none" stroke="#3b82f6" stroke-width="1.4" stroke-dasharray="5 5" opacity=".7" class="mc-dash"/>
+            <path id="mp3" d="M 30 150 C 100 150, 120 95, 160 95 C 200 95, 220 150, 290 150" fill="none" stroke="#ec4899" stroke-width="1.4" stroke-dasharray="4 5" opacity=".7" class="mc-dash"/>
+            <circle r="3.2" fill="#4ade80" filter="url(#mgGlow)"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#mp1"/></animateMotion></circle>
+            <circle r="3" fill="#60a5fa" filter="url(#mgGlow)"><animateMotion dur="3.4s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.5;1" calcMode="linear"><mpath href="#mp2"/></animateMotion></circle>
+            <circle r="3" fill="#f472b6" filter="url(#mgGlow)"><animateMotion dur="3s" repeatCount="indefinite"><mpath href="#mp3"/></animateMotion></circle>
+            <g class="mc-node" style="animation-delay:0s"><rect x="12" y="26" width="38" height="28" rx="7" fill="#0d1526" stroke="#22c55e"/><text x="31" y="44" text-anchor="middle" fill="#86efac" font-size="9" font-weight="800">MAIL</text></g>
+            <g class="mc-node" style="animation-delay:.4s"><rect x="140" y="80" width="42" height="30" rx="8" fill="#0d1526" stroke="#a855f7"/><text x="161" y="99" text-anchor="middle" fill="#d8b4fe" font-size="9" font-weight="800">ROUTER</text></g>
+            <g class="mc-node" style="animation-delay:.8s"><rect x="270" y="26" width="40" height="28" rx="7" fill="#0d1526" stroke="#3b82f6"/><text x="290" y="44" text-anchor="middle" fill="#93c5fd" font-size="9" font-weight="800">FRAUD</text></g>
+            <g class="mc-node" style="animation-delay:1.2s"><rect x="270" y="136" width="40" height="28" rx="7" fill="#0d1526" stroke="#14b8a6"/><text x="290" y="154" text-anchor="middle" fill="#5eead4" font-size="9" font-weight="800">BRIEF</text></g>
+            <g class="mc-node" style="animation-delay:1.6s"><rect x="12" y="136" width="42" height="28" rx="7" fill="#0d1526" stroke="#ec4899"/><text x="33" y="154" text-anchor="middle" fill="#f9a8d4" font-size="9" font-weight="800">GUARD</text></g>
+          </svg>
+        </div>
+        <div class="map-cta-text">
+          <p class="section-kicker"><span class="badge-new">NEW</span> Interactive experience</p>
+          <h3>Explore the animated system map</h3>
+          <p>Ten browsable architecture views in one canvas — zoom from the global pipeline into Mail Guard, Intake, Router, Orchestrator, Coverage, Fraud, Triage, and Copilot, with color-coded live data flows. Then press <strong>Simulate Live Claim</strong> to watch a claim travel end-to-end through every guardrail.</p>
+          <span class="map-cta-btn">Launch system map <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <figure class="arch-figure">
+        <figcaption>
+          <span class="arch-cap-title">System architecture &mdash; end to end</span>
+          <span class="arch-cap-sub">Seven numbered tiers &mdash; sources &amp; channels, ingestion &amp; guardrails, agent orchestration (mail guard, router, and the five specialist agents), the OpenAI intelligence layer, the Google Cloud data plane, notifications with a human-in-the-loop approval gate, and security &amp; observability. Colour-coded flows show primary data, LLM inference, notifications, audit/logging, and control/escalation.</span>
+        </figcaption>
+        <div class="arch-scroll">
+          <img src="architecture.gif" alt="Animated ClaimIQ production architecture diagram showing the OpenAI agentic claims pipeline across sources, ingestion guardrails, agent orchestration, OpenAI intelligence, Google Cloud data services, notifications, security, observability, and human review." loading="lazy">
+        </div>
+      </figure>
+    </section>
+
+    <section class="section workflow-section">
+      <div class="section-heading">
+        <p class="section-kicker">Operating model</p>
+        <h2>From raw email to adjuster-ready brief.</h2>
+      </div>
+      <div class="workflow-grid">
+        <article>
+          <span>01</span>
+          <h3>Receive and validate</h3>
+          <p>ClaimIQ reads the inbound email via Gmail IMAP. Input validation guards against oversized or malformed payloads, and Mail Guard checks for claimant name, policy number, incident date, and incident description. A confirmation email is sent immediately. General enquiries trigger a rewrite-request email with the submission form — no downstream agents run.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Extract and route</h3>
+          <p>Intake extracts 30+ structured fields and classifies attachments using vision and text models, uploading them to a per-claim Google Drive folder. The router then selects and orders exactly the downstream agents this claim needs, enforcing dependencies and pausing for missing documents.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Reason with evidence</h3>
+          <p>Coverage cites policy sections before any position is surfaced. Fraud computes an immutable, claim-type-weighted SIU score before the LLM explains it. Triage applies clinical urgency rules with hard overrides — emergency terms cannot be downgraded by any downstream output. Mid-pipeline status emails keep the claimant informed.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Synthesise and deliver</h3>
+          <p>The Copilot prepares a multi-role decision brief with citations, draft letters, and next steps. A PDF adjuster guide and a conditional detailed report are generated and emailed with a Google Drive link. The adjuster completes the decision via a pre-filled Google Form linked to the claim ID in BigQuery and Looker Studio.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="documentation" class="section docs-section">
+      <div class="section-heading">
+        <p class="section-kicker">Documentation</p>
+        <h2>ClaimIQ documentation center</h2>
+        <p>A reviewer-friendly, fully interactive reference — search the entire documentation, expand each agent, simulate the fraud score, and step through every pipeline stage. Covers the problem statement, technical architecture, agent responsibilities, model choices, guardrails, and local setup.</p>
+      </div>
+
+      <div class="docs-shell">
+        <div class="doc-search-wrap">
+          <input id="docSearch" type="search" autocomplete="off" spellcheck="false"
+            placeholder="Search the documentation — try “fraud score”, “SLA”, “BigQuery”, “rewrite”, “env”…"
+            aria-label="Search ClaimIQ documentation">
+          <span id="docSearchCount" class="doc-search-count" hidden></span>
+          <div id="docSearchResults" class="doc-search-results" hidden></div>
+        </div>
+
+        <div class="doc-tabs" role="tablist" aria-label="ClaimIQ documentation tabs">
+          <button class="doc-tab active" type="button" role="tab" aria-selected="true" aria-controls="doc-overview" data-doc-tab="overview">Overview</button>
+          <button class="doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-agents" data-doc-tab="agents">Agents</button>
+          <button class="doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-technical" data-doc-tab="technical">Technical</button>
+          <button class="doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-data" data-doc-tab="data">Data &amp; I/O</button>
+          <button class="doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-governance" data-doc-tab="governance">Governance</button>
+          <button class="doc-tab" type="button" role="tab" aria-selected="false" aria-controls="doc-setup" data-doc-tab="setup">Setup</button>
+        </div>
+
+        <article id="doc-overview" class="doc-panel active" role="tabpanel" data-doc-panel="overview">
+          <h3>Project overview</h3>
+          <p class="doc-lead">ClaimIQ is an AI-powered, multi-agent insurance claims platform built for Track 1 (industry and business transformation) of the HCLTech–OpenAI Agentic AI Hackathon. It transforms a raw claim email and its attachments into a structured claim record, a policy-aware coverage view, a fraud risk profile, a clinical triage decision, and an adjuster-ready decision brief — while keeping a human in control of every consequential decision.</p>
+
+          <div class="doc-columns">
+            <div>
+              <h4>Problem being solved</h4>
+              <ul>
+                <li>Manual claim review can take 45 to 90 minutes, and complex health claims can take multiple hours.</li>
+                <li>Unstructured emails and documents create inconsistent extraction, missed details, and slow customer follow-up.</li>
+                <li>Policy wording is dense, making coverage decisions risky without cited evidence.</li>
+                <li>Fraud review is often reactive instead of proactive and signal-driven.</li>
+                <li>Clinical urgency is difficult for non-clinical claims teams to prioritise safely.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>ClaimIQ outcome</h4>
+              <ul>
+                <li>Structured claim facts extracted from email and attachments in under two minutes.</li>
+                <li>Coverage status with cited policy sections and a regulatory compliance checklist.</li>
+                <li>Deterministic fraud score, triggered SIU signals, and a recommended investigation action.</li>
+                <li>Clinical priority, colour, routing queue, SLA, and specialist recommendation.</li>
+                <li>Copilot brief tailored for the claims officer, medical reviewer, fraud investigator, supervisor, audit, and customer-service teams.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h4>Claim types supported</h4>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Claim type</th><th>Typical evidence expected</th><th>Specialist reviewer</th></tr></thead>
+              <tbody>
+                <tr><td>Health / Medical</td><td>Policy number, doctor prescription, hospital estimate or discharge summary, pre-authorization form</td><td>Medical / UM reviewer</td></tr>
+                <tr><td>Motor</td><td>Policy number, repair invoice, damage photos, FIR / police report</td><td>Motor Assessor</td></tr>
+                <tr><td>Property</td><td>Policy number, damage photos, repair or valuation quote, fire-brigade NOC, FIR</td><td>Property Loss Surveyor</td></tr>
+                <tr><td>Travel</td><td>Policy number, hospital invoice abroad, doctor letter, passport, flight ticket</td><td>Travel Claims Reviewer</td></tr>
+                <tr><td>Life</td><td>Policy number, KYC document</td><td>Life Claims Reviewer</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>Hackathon fit</h4>
+          <div class="doc-columns">
+            <div>
+              <ul>
+                <li><strong>Track:</strong> Track 1 — Agents / Agentic Workflows for Industry &amp; Business Transformation.</li>
+                <li><strong>Industry:</strong> Insurance and financial services.</li>
+                <li><strong>Workflow:</strong> Mail Guard → Intake → Router → Coverage → Fraud → Triage → Adjuster Copilot.</li>
+              </ul>
+            </div>
+            <div>
+              <ul>
+                <li><strong>OpenAI stack:</strong> OpenAI API for structured agent reasoning, JSON agent-to-agent contracts, and Codex-assisted development and test scaffolding.</li>
+                <li><strong>Impact:</strong> faster first response, automated extraction, proactive fraud prioritisation, auditable decisions, and mandatory human approval gates for high-risk claims.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h4>Glossary — click a term to expand</h4>
+          <div class="doc-glossary">
+            <details class="gloss-item">
+              <summary>Agentic workflow</summary>
+              <p>A pipeline where specialised AI agents each own one bounded responsibility, exchange strict JSON contracts, and are orchestrated in dependency order — as opposed to a single monolithic prompt. ClaimIQ runs seven such agents per claim.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>ClaimSession</summary>
+              <p>The immutable, versioned state object created per claim. Agents read snapshots and append outputs; nothing mutates shared state, which makes every run replayable and auditable.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>Deterministic fallback</summary>
+              <p>A rule-based path (regex extraction, weighted scoring, hard triage rules) that produces a safe result whenever an OpenAI call fails or is disabled. Every ClaimIQ agent has one, and fallback reasons are tagged in the output.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>SIU signal</summary>
+              <p>A Special Investigation Unit fraud indicator — one of 13 deterministic checks (duplicate claim, identity mismatch, billing anomaly, …) each carrying a claim-type-specific weight that sums into the 0–100 fraud score.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>UM reviewer</summary>
+              <p>Utilisation-management reviewer — the clinical role the Triage agent emulates when assessing medical urgency, mapping emergency terms and vitals to priority, queue, SLA, and specialist.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>Human approval gate</summary>
+              <p>A mandatory stop before any consequential outcome. Triggered by a high fraud score, coverage uncertainty, high claim value, sensitive claim types, or duplicates — the AI prepares evidence, a human decides.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>Explainability JSON</summary>
+              <p>A delimited JSON block (<code>CLAIMIQ_EXPLAINABILITY_JSON_BEGIN … END</code>) emitted at the end of every run, containing per-agent outputs, timings, and reasons. The Streamlit console parses it to render the per-claim explainability view.</p>
+            </details>
+            <details class="gloss-item">
+              <summary>Rewrite request</summary>
+              <p>Mail Guard's structured reply when a claim email is missing required fields — it lists exactly what is missing and includes a resend form, halting the pipeline until the customer resubmits.</p>
+            </details>
+          </div>
+        </article>
+
+        <article id="doc-agents" class="doc-panel" role="tabpanel" data-doc-panel="agents" hidden>
+          <h3>Agent responsibilities</h3>
+          <p class="doc-lead">Each agent owns its own folder with three files — <code>agent.py</code> (the public <code>run()</code> entry point, audit events, and fallback selection), <code>tool.py</code> (OpenAI prompt construction and external lookups), and <code>functions.py</code> (deterministic business logic used for fallback and guardrails). This keeps every agent independently testable and its behaviour predictable even when the LLM is unavailable.</p>
+
+          <div class="acc-tools">
+            <button type="button" class="acc-btn" id="accExpandAll">Expand all</button>
+            <button type="button" class="acc-btn" id="accCollapseAll">Collapse all</button>
+          </div>
+          <div class="agent-acc-list" id="agentAccList">
+            <details class="agent-acc" open>
+              <summary><span class="acc-num">00</span> Mail Guard <span class="acc-meta">gpt-4o-mini · front-door gate</span></summary>
+              <div class="acc-body">
+                <p>Classifies each inbound email as a usable claim or a rewrite request before any downstream agent runs. It requires four fields — <code>claimant_name</code>, <code>policy_number</code>, <code>incident_date</code>, and <code>incident_description</code> — and rejects general enquiries, placeholder or fabricated policy numbers, future-dated incidents, and vague intent. Below a 0.50 confidence threshold it returns a structured rewrite request with a resend form. Model: gpt-4o-mini, with a keyword-based deterministic fallback.</p>
+                <div class="acc-chips"><span class="chip">In: subject + body + date</span><span class="chip">Out: proceed / rewrite_request</span><span class="chip">Fallback: keyword + regex guard</span></div>
+              </div>
+            </details>
+            <details class="agent-acc">
+              <summary><span class="acc-num">01</span> Intake Agent <span class="acc-meta">o4-mini + gpt-4o-mini vision · 30+ field contract</span></summary>
+              <div class="acc-body">
+                <p>Extracts 30+ structured fields (claimant, patient, policy, claim type, incident date, diagnosis, procedure, hospital, amount, currency, vehicle, location, risk indicators, missing information, and a narrative summary). It classifies attachments into document types — health card, prescription, MRI report, hospital estimate, pre-auth form, KYC, FIR/police report, fire-brigade NOC, damage photo, repair invoice, property policy — checks required documents per claim type, flags quality issues (blurry, cropped, unreadable) and red-flag terms (edited, mismatch, tamper, forged, duplicate), and sets an intake status of complete, needs_review, or incomplete. Reasoning: o4-mini; vision: gpt-4o-mini; deterministic regex fallback.</p>
+                <div class="acc-chips"><span class="chip">In: email + attachments</span><span class="chip">Out: structured claim + document summary</span><span class="chip">Fallback: regex extraction</span></div>
+              </div>
+            </details>
+            <details class="agent-acc">
+              <summary><span class="acc-num">02</span> Router <span class="acc-meta">gpt-5.5 (ambiguous only) · agent selection</span></summary>
+              <div class="acc-body">
+                <p>Picks and orders only the downstream agents a claim needs. A deterministic fast path routes all four downstream agents when intake is complete or needs_review (no LLM call); an OpenAI-backed router (gpt-5.5) handles ambiguous states; and incomplete intake pauses the pipeline for a customer document request. Dependencies are always enforced — copilot requires triage, and triage requires coverage and fraud.</p>
+                <div class="acc-chips"><span class="chip">In: intake status + session snapshot</span><span class="chip">Out: selected_agents in order</span><span class="chip">Fallback: heuristic route</span></div>
+              </div>
+            </details>
+            <details class="agent-acc">
+              <summary><span class="acc-num">03</span> Coverage Agent <span class="acc-meta">o4-mini · policy evidence + compliance</span></summary>
+              <div class="acc-body">
+                <p>Looks up the policy in BigQuery, searches per-type policy PDFs (health, motor, property, travel), and reasons about active status, covered perils, waiting-period breach, exclusions, sub-limits, and remaining balance. It returns a coverage status of covered, needs_review, or not_covered, then applies a regulatory-compliance layer that blocks any denial lacking a cited exclusion or clause and always attaches an appeals/grievance process. Model: o4-mini, with deterministic coverage from the policy record as fallback.</p>
+                <div class="acc-chips"><span class="chip">In: claim facts + policy record</span><span class="chip">Out: coverage status + citations</span><span class="chip">Fallback: policy-record rules</span></div>
+              </div>
+            </details>
+            <details class="agent-acc">
+              <summary><span class="acc-num">04</span> Fraud Agent <span class="acc-meta">o4-mini (explain only) · immutable score</span></summary>
+              <div class="acc-body">
+                <p>Computes 13 deterministic SIU signals with claim-type-specific weights, sums them into a 0–100 score, and assigns a risk band <em>before</em> any LLM synthesis. The LLM (o4-mini) can only explain the fixed score — it cannot revise it or convert evidence into an accusation. See the signal matrix and the interactive simulator below.</p>
+                <div class="acc-chips"><span class="chip">In: evidence + claim history</span><span class="chip">Out: score 0–100 + signals + action</span><span class="chip">Fallback: deterministic brief</span></div>
+              </div>
+            </details>
+            <details class="agent-acc">
+              <summary><span class="acc-num">05</span> Triage Agent <span class="acc-meta">o4-mini over hard rules · queue + SLA</span></summary>
+              <div class="acc-body">
+                <p>Acts like a clinical nurse plus a utilisation-management reviewer. It detects emergency, urgent, elective, and anomaly signals — including non-medical urgency for motor, property, and travel (total loss, displacement, evacuation, repatriation) — then assigns colour, priority, routing queue, SLA, specialist, and human-review requirement. Hard overrides ensure emergencies can never be downgraded. Model: o4-mini over deterministic hard rules.</p>
+                <div class="acc-chips"><span class="chip">In: coverage + fraud + clinical facts</span><span class="chip">Out: queue, colour, SLA, specialist</span><span class="chip">Fallback: hard-rule triage</span></div>
+              </div>
+            </details>
+            <details class="agent-acc">
+              <summary><span class="acc-num">06</span> Adjuster Copilot <span class="acc-meta">o4-mini · multi-role brief v2.0</span></summary>
+              <div class="acc-body">
+                <p>Synthesises all upstream outputs into a versioned (brief v2.0) multi-role decision brief: executive summary, claim details, coverage position, fraud assessment, routing decision, open questions, human-review checklist, evidence log, role-specific assistance, draft customer/adjuster letters, and a Markdown brief. It assists but never approves, denies, settles, or accuses. Model: o4-mini, with a structured fallback brief assembled deterministically.</p>
+                <div class="acc-chips"><span class="chip">In: all agent outputs</span><span class="chip">Out: decision brief + draft letters</span><span class="chip">Fallback: structured brief assembly</span></div>
+              </div>
+            </details>
+          </div>
+
+          <h4>Fraud SIU signal matrix</h4>
+          <p>Base weights, with per-claim-type overrides. A claim's score is the sum of its triggered signals, capped at 100 and banded into low / medium / high / critical.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>SIU signal</th><th class="num">Base</th><th class="num">Health</th><th class="num">Motor</th><th class="num">Property</th></tr></thead>
+              <tbody>
+                <tr><td>Duplicate claim detected</td><td class="num">35</td><td class="num">35</td><td class="num">40</td><td class="num">35</td></tr>
+                <tr><td>New policy close to incident</td><td class="num">30</td><td class="num">40</td><td class="num">35</td><td class="num">40</td></tr>
+                <tr><td>Identity mismatch</td><td class="num">25</td><td class="num">30</td><td class="num">20</td><td class="num">—</td></tr>
+                <tr><td>Timeline inconsistency</td><td class="num">25</td><td class="num">25</td><td class="num">30</td><td class="num">—</td></tr>
+                <tr><td>AI-generated or tampered document</td><td class="num">25</td><td class="num">30</td><td class="num">35</td><td class="num">—</td></tr>
+                <tr><td>Vendor flagged in registry</td><td class="num">25</td><td class="num">25</td><td class="num">30</td><td class="num">—</td></tr>
+                <tr><td>Document risk signal</td><td class="num">20</td><td class="num">25</td><td class="num">20</td><td class="num">—</td></tr>
+                <tr><td>Medical inconsistency</td><td class="num">20</td><td class="num">30</td><td class="num">5</td><td class="num">—</td></tr>
+                <tr><td>Billing anomaly</td><td class="num">20</td><td class="num">25</td><td class="num">30</td><td class="num">—</td></tr>
+                <tr><td>Provider risk</td><td class="num">20</td><td class="num">25</td><td class="num">35</td><td class="num">—</td></tr>
+                <tr><td>Claim amount outlier</td><td class="num">15</td><td class="num">20</td><td class="num">25</td><td class="num">25</td></tr>
+                <tr><td>Behavioral pattern</td><td class="num">15</td><td class="num">20</td><td class="num">25</td><td class="num">—</td></tr>
+                <tr><td>Low document confidence</td><td class="num">10</td><td class="num">15</td><td class="num">20</td><td class="num">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="doc-note">A fraud score at or above <code>FRAUD_HIGH_THRESHOLD</code> (default 70) forces mandatory human approval and, unless the claim is a clinical emergency, routes it to the Special Investigation Unit.</p>
+
+          <h4>Interactive — fraud score simulator</h4>
+          <p>Toggle SIU signals to see exactly how the deterministic scorer bands a claim and what happens downstream. This mirrors the real weighting logic: signals sum per claim type, cap at 100, and the LLM can never change the result.</p>
+          <div class="fraud-sim">
+            <div class="fraud-sim-controls">
+              <label class="fs-type-label" for="fsType">Claim type
+                <select id="fsType">
+                  <option value="health">Health / Medical</option>
+                  <option value="motor">Motor</option>
+                  <option value="property">Property</option>
+                  <option value="base">Travel / Life (base weights)</option>
+                </select>
+              </label>
+              <div id="fsSignals" class="fs-signals" aria-label="SIU signal toggles"></div>
+            </div>
+            <div class="fraud-sim-readout" aria-live="polite">
+              <div class="fs-score-row">
+                <div class="fs-score"><span id="fsScore">0</span><small>/ 100</small></div>
+                <div id="fsBand" class="fs-band fs-low">LOW RISK</div>
+              </div>
+              <div class="fs-bar"><div id="fsFill"></div></div>
+              <ul id="fsOutcome" class="fs-outcome"></ul>
+              <p class="doc-note fs-note">Guardrail: the score you see here is final before any LLM call — o4-mini writes the SIU explanation around it but cannot revise it.</p>
+            </div>
+          </div>
+
+          <h4>Triage routing, colour &amp; SLA map</h4>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Routing queue</th><th>Colour</th><th class="num">SLA (hours)</th><th>When</th></tr></thead>
+              <tbody>
+                <tr><td>Medical emergency review</td><td class="pill-red">Red</td><td class="num">0.25</td><td>Cardiac arrest, stroke, respiratory failure, sepsis, major trauma</td></tr>
+                <tr><td>Urgent medical review</td><td class="pill-amber">Amber</td><td class="num">2</td><td>Urgent clinical need short of a hard emergency</td></tr>
+                <tr><td>Urgent claim review</td><td class="pill-amber">Amber</td><td class="num">8</td><td>Non-medical urgency: total loss, evacuation, repatriation</td></tr>
+                <tr><td>Auto approve</td><td class="pill-green">Green</td><td class="num">24</td><td>Low risk, covered, within value threshold (still human-gated for mandatory types)</td></tr>
+                <tr><td>Medical document request</td><td class="pill-amber">Amber</td><td class="num">24</td><td>Missing or low-quality clinical documents</td></tr>
+                <tr><td>Standard review</td><td class="pill-green">Green</td><td class="num">48</td><td>Routine claims officer queue</td></tr>
+                <tr><td>Senior review</td><td class="pill-amber">Amber</td><td class="num">72</td><td>Coverage uncertainty or elevated concern</td></tr>
+                <tr><td>Special investigation</td><td class="pill-red">Red</td><td class="num">120</td><td>Fraud score ≥ 70 (or ≥ 50 with concerns)</td></tr>
+                <tr><td>Legal</td><td class="pill-red">Red</td><td class="num">168</td><td>Legal exposure requiring counsel review</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="doc-note">Mandatory human-approval triggers: fraud score above threshold, coverage <span class="chip">needs_review</span> or <span class="chip">not_covered</span>, claim amount above <code>HIGH_VALUE_THRESHOLD</code> (₹500,000), claim type in {health, medical, legal, life}, or a detected duplicate.</p>
+        </article>
+
+        <article id="doc-technical" class="doc-panel" role="tabpanel" data-doc-panel="technical" hidden>
+          <h3>Technical reference</h3>
+          <div class="tech-grid">
+            <div>
+              <h4>Runtime stack</h4>
+              <dl>
+                <dt>Language</dt><dd>Python 3.11+ (packaged via pyproject.toml)</dd>
+                <dt>AI</dt><dd>OpenAI Responses API through a shared client with deterministic fallbacks</dd>
+                <dt>Operator UI</dt><dd>Streamlit console — summary, explainability, and live-logs tabs</dd>
+                <dt>Dashboard</dt><dd>Looker Studio report over the BigQuery claim tables</dd>
+                <dt>Reviewer site</dt><dd>This static website (no login or backend required)</dd>
+                <dt>Email I/O</dt><dd>Gmail IMAP (fetch unread) + SMTP over SSL (send replies and assessments)</dd>
+                <dt>Claim storage</dt><dd>Google BigQuery — claims_master, agent_outputs, audit_trail, policies</dd>
+                <dt>Document store</dt><dd>Google Drive (OAuth) — per-claim folder with attachments and adjuster guide PDF</dd>
+                <dt>Policy source</dt><dd>BigQuery policies table and per-type policy PDFs (health, motor, property, travel)</dd>
+                <dt>Reports</dt><dd>reportlab (PDF adjuster guide + conditional detailed report) and matplotlib (risk charts)</dd>
+                <dt>Approval flow</dt><dd>Google Forms — adjuster submits decision linked to claim ID</dd>
+                <dt>Tests</dt><dd>pytest suite covering intake, fraud, coverage compliance, triage edge cases, routing, and pipeline smoke</dd>
+              </dl>
+            </div>
+            <div>
+              <h4>Model roles</h4>
+              <dl>
+                <dt>Default / text</dt><dd>gpt-4o-mini via OPENAI_MODEL — mail guard, email drafting, and attachment analysis</dd>
+                <dt>Orchestrator &amp; router</dt><dd>gpt-5.5 via CLAIMIQ_ORCHESTRATOR_MODEL / CLAIMIQ_ROUTER_MODEL</dd>
+                <dt>Specialist reasoning</dt><dd>o4-mini for coverage, fraud, triage, copilot, and intake reasoning</dd>
+                <dt>Document vision</dt><dd>gpt-4o-mini via CLAIMIQ_VISION_MODEL</dd>
+                <dt>Toggle</dt><dd>CLAIMIQ_USE_OPENAI=false forces the full deterministic path for offline demos</dd>
+                <dt>Fallbacks</dt><dd>Regex, deterministic rules, local policy evidence, and structured brief assembly</dd>
+              </dl>
+              <h4>Email notification flow</h4>
+              <dl>
+                <dt>Step 1</dt><dd>Received confirmation sent to claimant immediately after Mail Guard passes</dd>
+                <dt>Steps 2–4</dt><dd>Mid-pipeline updates after Coverage and Triage, plus a fraud alert only when the score clears the email threshold</dd>
+                <dt>Step 6</dt><dd>Full assessment email with attached PDF adjuster guide sent on pipeline completion</dd>
+              </dl>
+            </div>
+          </div>
+          <h4>Pipeline contract</h4>
+          <p>A session-based orchestrator owns an immutable <code>ClaimSession</code> with a versioned workflow state, and runs the stages in dependency order: Mail Guard, Intake, Router, Coverage, Fraud, Triage, and Copilot. Each stage returns structured JSON and writes start/completion events with durations so later agents can build on earlier decisions. All events are designed for BigQuery audit tables when persistence is enabled. At the end of every run the pipeline emits a delimited explainability JSON block (<code>CLAIMIQ_EXPLAINABILITY_JSON_BEGIN … END</code>) that the Streamlit console parses and renders per claim.</p>
+
+          <h4>Interactive — pipeline stage explorer</h4>
+          <p>Click any stage to inspect its model, contract, customer email, fallback, and audit events. Use ←/→ arrow keys to step through the pipeline.</p>
+          <div class="pipe-explorer">
+            <div class="pipe-strip" id="pipeStrip" role="tablist" aria-label="Pipeline stages"></div>
+            <div class="pipe-detail" id="pipeDetail" aria-live="polite"></div>
+          </div>
+
+          <h4>Workflow state machine</h4>
+          <p>The claim session advances through explicit states, each recorded on the immutable session so the workflow is fully replayable:</p>
+          <ul class="doc-stage-list">
+            <li><strong>claim_received</strong><span>Email accepted; instant acknowledgment sent to the claimant.</span></li>
+            <li><strong>guard_passed</strong><span>Mail Guard validated the four required fields (or issued a rewrite request).</span></li>
+            <li><strong>intake_complete</strong><span>Structured claim record created from body + attachments.</span></li>
+            <li><strong>routing_decided</strong><span>Router selected and ordered the downstream agents (or paused for documents).</span></li>
+            <li><strong>agents_running</strong><span>Coverage, Fraud, Triage, and Copilot execute with per-stage timing.</span></li>
+            <li><strong>complete / partial / failed</strong><span>Terminal state; report generated and assessment email sent.</span></li>
+          </ul>
+
+          <h4>Repository layout</h4>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Path</th><th>Responsibility</th></tr></thead>
+              <tbody>
+                <tr><td>claimiq/agents/*</td><td>Five specialist agents, each with agent.py / tool.py / functions.py</td></tr>
+                <tr><td>claimiq/pipeline/</td><td>orchestrator, router, session, and mail_guard</td></tr>
+                <tr><td>claimiq/shared/</td><td>config, openai_client, google_clients, audit, validation, pdf_text</td></tr>
+                <tr><td>claimiq/tools/</td><td>email_tool (staged + AI-drafted emails) and report_tool (PDF)</td></tr>
+                <tr><td>app/</td><td>run.py runner, streamlit_app.py console, email_io, attachments, bq, adjuster_guide</td></tr>
+                <tr><td>docs/</td><td>per-type coverage policy PDFs and technical documentation</td></tr>
+                <tr><td>tests/</td><td>pytest suite + realistic motor, health, property, and travel fixtures</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article id="doc-data" class="doc-panel" role="tabpanel" data-doc-panel="data" hidden>
+          <h3>Data model &amp; I/O contracts</h3>
+          <p class="doc-lead">ClaimIQ reads from Gmail, stores evidence in Google Drive, persists structured records in BigQuery, surfaces them on Looker Studio, and closes the loop with a pre-filled Google Form. Every external boundary has a defined contract and a safe skip path when credentials are absent.</p>
+
+          <h4>Pipeline result object</h4>
+          <p>The orchestrator returns one JSON object per claim:</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td>claim_id</td><td>CLM-YYYYMMDD-XXXXXXXX unique reference</td></tr>
+                <tr><td>status</td><td>complete · partial · intake_only · rewrite_required · error</td></tr>
+                <tr><td>workflow_state</td><td>Current/previous/next stage, responsible agent, pending agents</td></tr>
+                <tr><td>route</td><td>Selected agents, next agent, reason, claim status, confidence</td></tr>
+                <tr><td>triage_color / fraud_score</td><td>Headline risk indicators</td></tr>
+                <tr><td>required_human_approval</td><td>Boolean gate — defaults to true when triage is absent</td></tr>
+                <tr><td>outputs</td><td>Full per-agent JSON: intake, coverage, fraud, triage, copilot</td></tr>
+                <tr><td>errors / agent_errors / agent_timings</td><td>Failure and latency trace</td></tr>
+                <tr><td>report_pdf_bytes</td><td>Conditional detailed PDF report for attachment</td></tr>
+                <tr><td>duration_ms</td><td>End-to-end pipeline duration</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>BigQuery tables</h4>
+          <div class="doc-columns">
+            <div>
+              <h5>claims_master</h5>
+              <p>One row per claim: claim_id, sender_email, claimant_name, policy_number, claim_type, incident_date, incident_description, claim_amount_mentioned, contact_phone, location_of_incident, vehicle_registration, supporting_docs_mentioned, attachment_count, drive_folder_url, doc_risk_signals, validation_status, missing_fields, pipeline_status, created_at, updated_at.</p>
+              <h5>policies</h5>
+              <p>Policy lookup source: active dates, covered perils, waiting-period days, exclusions, sub-limits, and remaining balance used by the Coverage agent.</p>
+            </div>
+            <div>
+              <h5>agent_outputs</h5>
+              <p>One row per agent per claim: claim_id, agent_name, agent_version, input_hash, output_json, status, error_message, started_at, completed_at, duration_ms.</p>
+              <h5>audit_trail</h5>
+              <p>Orchestrator events — pipeline_started, mail_guard_completed, route_selected, pipeline_completed — with payloads and durations. The writer strips unknown fields against the live schema so schema drift does not break the run.</p>
+            </div>
+          </div>
+
+          <h4>Email notification stages</h4>
+          <ul class="doc-stage-list">
+            <li><strong>claim_received</strong><span>Instant acknowledgment when the email arrives and passes Mail Guard.</span></li>
+            <li><strong>coverage_verified / coverage_needs_review</strong><span>Sent after the Coverage agent, depending on outcome.</span></li>
+            <li><strong>fraud_alert</strong><span>Sent only when the fraud score clears the email threshold (HIGH/CRITICAL).</span></li>
+            <li><strong>routing_assigned</strong><span>Sent after Triage with priority, queue, and SLA.</span></li>
+            <li><strong>pipeline_complete</strong><span>Full assessment with the attached adjuster-guide PDF.</span></li>
+          </ul>
+          <p class="doc-note">All replies use <span class="chip">Re: {original subject}</span> and the original Message-ID so Gmail threads every update into one conversation. Templates have deterministic fallbacks; an AI-drafted <span class="chip">custom</span> stage is available for orchestrator-instructed messages.</p>
+
+          <h4>Documents, approval &amp; dashboard</h4>
+          <ul>
+            <li><strong>Google Drive:</strong> attachments and the adjuster-guide PDF are uploaded to <span class="chip">ClaimIQ Claims/{claim_id}</span> via OAuth; the folder link is embedded in the assessment email and stored on the claim.</li>
+            <li><strong>Google Forms:</strong> the adjuster's decision form is pre-filled with the claim ID so the submission links back to the correct BigQuery record.</li>
+            <li><strong>Looker Studio:</strong> a live dashboard reads the BigQuery claim tables for queue, risk, and SLA monitoring.</li>
+          </ul>
+        </article>
+
+        <article id="doc-governance" class="doc-panel" role="tabpanel" data-doc-panel="governance" hidden>
+          <h3>Governance and safety guardrails</h3>
+          <div class="guardrail-grid">
+            <article>
+              <h4>Human authority</h4>
+              <p>ClaimIQ prepares evidence and recommendations. It does not make final approval, rejection, settlement, denial, or accusation decisions.</p>
+            </article>
+            <article>
+              <h4>Coverage compliance</h4>
+              <p>Coverage cannot deny without cited policy evidence. Missing critical fields force review, and appeals guidance is included in the coverage output.</p>
+            </article>
+            <article>
+              <h4>Fraud integrity</h4>
+              <p>Fraud score is computed by deterministic signals first. The LLM can explain the score but cannot rewrite the score or turn investigation evidence into an accusation.</p>
+            </article>
+            <article>
+              <h4>Clinical safety</h4>
+              <p>Emergency terms such as cardiac arrest, stroke, respiratory failure, sepsis, or major trauma trigger hard overrides so urgent claims cannot be downgraded.</p>
+            </article>
+            <article>
+              <h4>Auditability</h4>
+              <p>Agent starts, completions, durations, statuses, and full outputs — plus a versioned workflow state on every claim session — are designed for BigQuery audit tables when persistence is enabled.</p>
+            </article>
+            <article>
+              <h4>Input validation</h4>
+              <p>Oversized or malformed submissions are treated as a customer-communication problem, not a crash. They route to the rewrite path with a structured resend form instead of failing the poll cycle.</p>
+            </article>
+            <article>
+              <h4>Resilience</h4>
+              <p>Every major step has a deterministic fallback path and tags fallback reasons, making failure modes visible instead of silent. The whole pipeline can run offline with CLAIMIQ_USE_OPENAI=false.</p>
+            </article>
+          </div>
+
+          <h4>Input validation &amp; injection guards</h4>
+          <p>Externally supplied fields are bounded before they reach any agent. Limits are environment-overridable so operations can raise them without a code change, and a failed check routes to the customer rewrite path rather than crashing the poll cycle.</p>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Field</th><th>Limit</th><th>Env override</th></tr></thead>
+              <tbody>
+                <tr><td>Email body</td><td>50,000 chars</td><td>CLAIMIQ_MAX_EMAIL_LENGTH</td></tr>
+                <tr><td>Subject</td><td>500 chars</td><td>CLAIMIQ_MAX_SUBJECT_LENGTH</td></tr>
+                <tr><td>Policy number</td><td>50 chars + India/UK/US format</td><td>CLAIMIQ_MAX_POLICY_NUMBER_LENGTH</td></tr>
+                <tr><td>Claim amount</td><td>₹50,000,000 (5 crore)</td><td>CLAIMIQ_MAX_CLAIM_AMOUNT_INR</td></tr>
+                <tr><td>Uploaded documents</td><td>25 files</td><td>CLAIMIQ_MAX_UPLOADED_DOCUMENTS</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="doc-note">A forbidden-pattern scan rejects injection payloads such as <span class="chip">&lt;script&gt;</span>, <span class="chip">eval(</span>, <span class="chip">os.system(</span>, and <span class="chip">subprocess.run(</span> in the email body and subject.</p>
+
+          <h4>Responsible AI summary</h4>
+          <p>ClaimIQ is decision support, not autonomous settlement authority. High-risk and high-value claims trigger mandatory human approval; coverage uncertainty routes to human review; fraud signals are evidence-linked and explainable but never accusatory; agent failures fall back to safe deterministic outputs; and customer-facing emails describe assessment status and next steps rather than final legal liability.</p>
+        </article>
+
+        <article id="doc-setup" class="doc-panel" role="tabpanel" data-doc-panel="setup" hidden>
+          <h3>Setup guide</h3>
+          <div class="tech-grid">
+            <div>
+              <h4>Reviewer website (VS Code + Live Server)</h4>
+              <ol>
+                <li>Open VS Code and choose <strong>File &gt; Open Folder</strong>.</li>
+                <li>Select the <strong>claimiq_website</strong> folder.</li>
+                <li>Install the <strong>Live Server</strong> extension.</li>
+                <li>Right-click <strong>index.html</strong> and choose <strong>Open with Live Server</strong>.</li>
+              </ol>
+              <h4>Static hosting checklist</h4>
+              <ul>
+                <li>Upload the three files together: index.html, styles.css, and script.js.</li>
+                <li>Use GitHub Pages, Netlify, Vercel, or any static hosting provider.</li>
+                <li>No backend or credentials required. The playground is a front-end simulation only.</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Python pipeline (local run)</h4>
+              <ol>
+                <li>Clone the ClaimIQ repo and <code>cd</code> into the project root.</li>
+                <li>Install dependencies: <code>pip install -r requirements.txt</code> (or <code>pip install -e .</code>).</li>
+                <li>Copy <code>.env.example</code> to <code>.env</code> and set <code>OPENAI_API_KEY</code>, Gmail credentials, and Google OAuth credentials path.</li>
+                <li>Deterministic smoke test (no external services): <code>python -m claimiq.pipeline.orchestrator --sample tests/sample_claim.json --pretty</code></li>
+                <li>Run the built-in demo (no Gmail needed): <code>python app/run.py --demo</code></li>
+                <li>Watch Gmail continuously: <code>python app/run.py --watch</code></li>
+                <li>Operator console: <code>streamlit run app/streamlit_app.py</code></li>
+                <li>Skip BigQuery writes: add <code>--no-bq</code> to any command. Run tests with <code>pytest -q</code>.</li>
+              </ol>
+              <h4>Key dependencies</h4>
+              <p class="small">openai · google-cloud-bigquery · google-cloud-storage · google-api-python-client · google-auth-oauthlib · python-dotenv · streamlit · pypdf · python-docx · reportlab · matplotlib · pytest.</p>
+            </div>
+          </div>
+
+          <h4>Environment variables</h4>
+          <div class="doc-table-wrap">
+            <table class="doc-table">
+              <thead><tr><th>Variable</th><th>Default / purpose</th></tr></thead>
+              <tbody>
+                <tr><td>OPENAI_API_KEY</td><td>Required for all live agent calls</td></tr>
+                <tr><td>OPENAI_MODEL</td><td>gpt-4o-mini — default text / mail guard / email / attachments</td></tr>
+                <tr><td>CLAIMIQ_ORCHESTRATOR_MODEL / _ROUTER_MODEL</td><td>gpt-5.5 — routing and orchestration</td></tr>
+                <tr><td>CLAIMIQ_REASONING_MODEL</td><td>o4-mini — coverage, fraud, triage, copilot, intake reasoning</td></tr>
+                <tr><td>CLAIMIQ_VISION_MODEL</td><td>gpt-4o-mini — document vision</td></tr>
+                <tr><td>CLAIMIQ_USE_OPENAI</td><td>true — set false to force the deterministic offline path</td></tr>
+                <tr><td>CLAIMIQ_WRITE_BQ</td><td>false — enable BigQuery persistence</td></tr>
+                <tr><td>HIGH_VALUE_THRESHOLD / FRAUD_HIGH_THRESHOLD</td><td>500000 and 70 — human-approval gates</td></tr>
+                <tr><td>GMAIL_ADDRESS / GMAIL_APP_PASSWORD</td><td>Gmail IMAP read + SMTP send</td></tr>
+                <tr><td>GCP_PROJECT_ID / BQ_DATASET</td><td>BigQuery project and dataset</td></tr>
+                <tr><td>GOOGLE_OAUTH_CREDENTIALS / DRIVE_ROOT_FOLDER_NAME</td><td>Drive OAuth client and root folder</td></tr>
+                <tr><td>FORM_URL_BASE / LOOKER_URL</td><td>Google Form approval link and Looker Studio dashboard</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="tech-grid">
+            <div>
+              <h4>Google service setup</h4>
+              <ol>
+                <li><strong>Gmail:</strong> enable two-step verification, create an app password, and set <code>GMAIL_ADDRESS</code> + <code>GMAIL_APP_PASSWORD</code>. IMAP is used for reads, SMTP over SSL for sends.</li>
+                <li><strong>Drive:</strong> create an OAuth 2.0 client ID, download the JSON, set <code>GOOGLE_OAUTH_CREDENTIALS</code>, and run once to complete the consent flow (token caches to <code>~/.claimiq/drive_token.json</code>).</li>
+                <li><strong>BigQuery:</strong> provision the <code>claims_master</code>, <code>agent_outputs</code>, <code>audit_trail</code>, and <code>policies</code> tables; the writer strips unknown fields against the live schema.</li>
+                <li><strong>Looker Studio:</strong> point a report at the claim tables and set <code>LOOKER_URL</code> for the console link.</li>
+              </ol>
+            </div>
+            <div>
+              <h4>Testing &amp; validation</h4>
+              <ul>
+                <li>Run the full suite with <code>pytest -q</code>.</li>
+                <li>Coverage spans intake extraction, fraud functions, coverage compliance, triage edge cases, model routing, output formatting, mail-guard dates, session strategy, and a pipeline smoke test.</li>
+                <li>Realistic fixtures for motor, health (incl. emergency), property (fire), and travel (medical abroad) claims live under <code>tests/</code>.</li>
+                <li>An AST parse check validates every file in <code>claimiq/</code>, <code>app/</code>, and <code>tests/</code> without executing them.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="playground" class="section playground-section">
+      <div class="section-heading">
+        <p class="section-kicker">Interactive playground</p>
+        <h2>Run a simulated ClaimIQ claim — or drive the real one.</h2>
+        <p>Two ways to review ClaimIQ. Run the <strong>simulated pipeline</strong> below for an instant, reviewer-safe walkthrough — no login, no API key, no email sending, and no real claim data. Or open the <strong>live application</strong> and process a full end-to-end claim using the real test files bundled with this submission.</p>
+      </div>
+
+      <div class="live-app-banner">
+        <div class="live-app-copy">
+          <span class="live-app-tag">Live application</span>
+          <h3>Run a real end-to-end claim</h3>
+          <p>The deployed Streamlit app runs the actual 7-stage agentic pipeline: mail guard, intake with document vision, routing, coverage, fraud scoring, triage, and the adjuster copilot brief. Upload a ready-made claim bundle from the <code>test_data/</code> folder to see it work on genuine multi-document claims.</p>
+        </div>
+        <div class="live-app-actions">
+          <a class="primary-action" href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">Open the live app ↗</a>
+          <span class="live-app-note">Reviewer-ready · no credentials needed to explore the dashboard</span>
+        </div>
+      </div>
+
+      <div class="playground">
+        <aside class="scenario-panel">
+          <label>Scenario — click to load</label>
+          <div class="scenario-chips" id="scenarioChips">
+            <button type="button" class="scen-chip active" data-scenario="motor">
+              <span class="sc-row"><span class="sc-name">Motor accident</span><span class="sc-pill sc-green">Green · standard</span></span>
+              <span class="sc-sub">Complete documents · bundled in test_data</span>
+            </button>
+            <button type="button" class="scen-chip" data-scenario="health">
+              <span class="sc-row"><span class="sc-name">Cardiac emergency</span><span class="sc-pill sc-red">Red · 0.25h SLA</span></span>
+              <span class="sc-sub">Clinical hard override · bundled in test_data</span>
+            </button>
+            <button type="button" class="scen-chip" data-scenario="property">
+              <span class="sc-row"><span class="sc-name">Property fire</span><span class="sc-pill sc-amber">Amber · high value</span></span>
+              <span class="sc-sub">₹15.8L loss, approval gate · bundled in test_data</span>
+            </button>
+            <button type="button" class="scen-chip" data-scenario="travel">
+              <span class="sc-row"><span class="sc-name">Travel emergency</span><span class="sc-pill sc-amber">Amber · urgent</span></span>
+              <span class="sc-sub">Cashless authorization abroad · bundled in test_data</span>
+            </button>
+            <button type="button" class="scen-chip" data-scenario="incomplete">
+              <span class="sc-row"><span class="sc-name">Vague inquiry</span><span class="sc-pill sc-grey">Guarded · rewrite</span></span>
+              <span class="sc-sub">Mail Guard stops it at the front door</span>
+            </button>
+            <button type="button" class="scen-chip" data-scenario="fraud">
+              <span class="sc-row"><span class="sc-name">Suspicious claim</span><span class="sc-pill sc-red">SIU · score 86</span></span>
+              <span class="sc-sub">Identity mismatch + edited documents</span>
+            </button>
+          </div>
+          <div class="watch-box">
+            <b>⌖ Reviewer lens — what to watch in this run</b>
+            <p id="watchText"></p>
+          </div>
+          <label for="claimInput">Inbound email / claim note — editable</label>
+          <textarea id="claimInput" spellcheck="false"></textarea>
+          <button id="runDemo" class="primary-action" type="button">▶ Run simulated pipeline</button>
+          <button id="resetDemo" class="ghost-action" type="button">Reset scenario</button>
+          <p class="demo-note">This playground mirrors the live pipeline's logic and output style for a fast, offline review. Each scenario here matches a real claim bundle in <code>test_data/</code> — run the same case end to end in the <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">live app ↗</a>.</p>
+        </aside>
+
+        <section class="results-panel" aria-live="polite">
+          <div class="status-strip">
+            <span id="runStatus">Ready</span>
+            <span id="runTime">No run yet</span>
+          </div>
+          <div class="pg-progress"><div id="pgFill"></div></div>
+          <div id="agentTimeline" class="timeline"></div>
+          <div id="runSummary" class="run-summary" hidden></div>
+          <div class="pg-console">
+            <div class="pg-console-head"><span class="pg-dot"></span>AGENT CONSOLE · live run log</div>
+            <div id="pgLog" class="pg-log"><div class="pg-log-empty">Run a scenario to stream the agent activity log here — the same order the real orchestrator executes.</div></div>
+          </div>
+          <div class="brief-grid">
+            <article class="brief-card">
+              <h3>Claim snapshot</h3>
+              <dl id="snapshot"></dl>
+            </article>
+            <article class="brief-card">
+              <h3>Decision support</h3>
+              <dl id="decisionSupport"></dl>
+            </article>
+          </div>
+          <article class="brief-card full">
+            <h3>Adjuster copilot brief <button id="copyBrief" class="copy-btn" type="button" hidden>Copy brief</button></h3>
+            <div id="copilotBrief" class="copilot-empty">Run the playground to generate a simulated reviewer brief.</div>
+          </article>
+        </section>
+      </div>
+    </section>
+
+    <section id="impact" class="section impact-section">
+      <div class="section-heading">
+        <p class="section-kicker">Business impact</p>
+        <h2>Built for measurable claims transformation.</h2>
+      </div>
+      <div class="impact-grid">
+        <article><strong>97%</strong><span>reduction in time to first structured output versus manual review.</span></article>
+        <article><strong>13</strong><span>claim-type-weighted SIU signals for proactive fraud interception.</span></article>
+        <article><strong>100%</strong><span>agent-stage audit trail when connected to BigQuery operations.</span></article>
+        <article><strong>Human in control</strong><span>the copilot assists, but never approves, denies, settles, or accuses.</span></article>
+      </div>
+    </section>
+
+    <section id="access" class="section access-section">
+      <div class="access-card">
+        <p class="section-kicker">Access instructions</p>
+        <h2>Reviewer access for hackathon submission</h2>
+
+        <p class="link-box link-box-live">
+          <span class="link-box-label">Live app</span>
+          <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">https://claimiappihackathon-0075.streamlit.app/ ↗</a>
+        </p>
+        <p class="small">Open the deployed Streamlit app to run the real 7-stage agentic pipeline end to end. No account or credentials are needed to explore the dashboard. If the app is asleep, click <strong>“Yes, get this app back up”</strong> and give it ~30 seconds to wake.</p>
+
+        <h3 class="access-h">Choose your review path</h3>
+        <div class="path-grid">
+          <article class="path-card">
+            <span class="path-time">~2 min</span>
+            <h4>Instant offline review</h4>
+            <p>Stay on this site. Six simulated scenarios, zero setup — no login, API key, email account, or BigQuery project.</p>
+            <ul>
+              <li>Playground pipeline run with live agent console</li>
+              <li>Fraud score simulator in the documentation center</li>
+              <li>Pipeline stage explorer, tab by tab</li>
+            </ul>
+            <a class="path-btn" href="#playground">Start in the playground →</a>
+          </article>
+          <article class="path-card featured">
+            <span class="path-time">~10 min</span>
+            <h4>Full live run</h4>
+            <p>Open the deployed Streamlit app and process a real multi-document claim bundle through the actual 7-stage pipeline.</p>
+            <ul>
+              <li>Real OpenAI agents + document vision</li>
+              <li>Fraud signal breakdown per claim</li>
+              <li>Explainability JSON, timings, adjuster brief</li>
+            </ul>
+            <a class="path-btn" href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">Open the live app ↗</a>
+          </article>
+          <article class="path-card">
+            <span class="path-time">~20 min</span>
+            <h4>Deep dive</h4>
+            <p>Architecture, governance, and evidence — how the system is built and where the guardrails live.</p>
+            <ul>
+              <li>Interactive system map with claim simulation</li>
+              <li>Documentation center (searchable)</li>
+              <li>Drive folder with every claim document</li>
+            </ul>
+            <a class="path-btn" href="claimiq_system_map.html">Open the system map →</a>
+          </article>
+        </div>
+
+        <h3 class="access-h">Test-data claim bundles — one folder per scenario</h3>
+        <p class="small">Each bundle in <code>test_data/</code> contains the claim email (<code>mail.txt</code>) and its supporting documents. Copy the email for the live app, load the matching scenario in the playground, or open the documents in Drive.</p>
+        <div class="bundle-grid">
+          <article class="bundle-card">
+            <div class="bundle-head"><h4>Motor Claim — Car Accident</h4><span class="sc-pill sc-green">Green · standard</span></div>
+            <p>Policy, repair estimate (₹1.6L), 5 damage photos, police FIR, driving license, insurance card.</p>
+            <div class="bundle-actions">
+              <button type="button" class="bundle-btn load-scen" data-scenario="motor">▶ Load in playground</button>
+              <button type="button" class="bundle-btn copy-mail" data-scenario="motor">Copy claim email</button>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+            </div>
+          </article>
+          <article class="bundle-card">
+            <div class="bundle-head"><h4>Health Claim — EMERGENCY (Cardiac)</h4><span class="sc-pill sc-red">Red · 0.25h SLA</span></div>
+            <p>Policy, doctor's emergency letter, ICU admission record, hospital invoice — triggers the clinical hard override.</p>
+            <div class="bundle-actions">
+              <button type="button" class="bundle-btn load-scen" data-scenario="health">▶ Load in playground</button>
+              <button type="button" class="bundle-btn copy-mail" data-scenario="health">Copy claim email</button>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+            </div>
+          </article>
+          <article class="bundle-card">
+            <div class="bundle-head"><h4>Health Claim — ACL Reconstruction</h4><span class="sc-pill sc-amber">Elective surgical</span></div>
+            <p>Health policy, prescription letter, discharge summary, itemized bill, lab &amp; MRI reports. The playground's SIU scenario is a suspicious variant of this case.</p>
+            <div class="bundle-actions">
+              <button type="button" class="bundle-btn load-scen" data-scenario="fraud">▶ SIU variant in playground</button>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+            </div>
+          </article>
+          <article class="bundle-card">
+            <div class="bundle-head"><h4>Property Claim — Fire Damage</h4><span class="sc-pill sc-amber">Amber · high value</span></div>
+            <p>Damage &amp; valuation report, fire brigade report, police FIR, property photos — ₹15.8L loss against ₹40L sum insured.</p>
+            <div class="bundle-actions">
+              <button type="button" class="bundle-btn load-scen" data-scenario="property">▶ Load in playground</button>
+              <button type="button" class="bundle-btn copy-mail" data-scenario="property">Copy claim email</button>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+            </div>
+          </article>
+          <article class="bundle-card">
+            <div class="bundle-head"><h4>Travel Claim — Medical Emergency Abroad</h4><span class="sc-pill sc-amber">Amber · urgent</span></div>
+            <p>Travel policy, hospital invoice &amp; discharge summary, doctor's letter, passport copy, flight ticket — cashless authorization case.</p>
+            <div class="bundle-actions">
+              <button type="button" class="bundle-btn load-scen" data-scenario="travel">▶ Load in playground</button>
+              <button type="button" class="bundle-btn copy-mail" data-scenario="travel">Copy claim email</button>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="access-grid" style="margin-top:30px">
+          <div>
+            <h3 class="access-h">Live app walkthrough</h3>
+            <ol class="walk-steps">
+              <li><strong>Open the app</strong><span>Launch the <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">live Streamlit app ↗</a>. If asleep, click “Yes, get this app back up” and wait ~30 seconds.</span></li>
+              <li><strong>Pick a bundle</strong><span>Choose any <code>test_data/</code> scenario above — or copy its claim email straight from this page.</span></li>
+              <li><strong>Submit the claim</strong><span>Paste the email text into the claim field and upload the supporting documents from the same bundle.</span></li>
+              <li><strong>Watch the agents</strong><span>Intake with document vision, routing, coverage, fraud scoring, triage, and the copilot brief — with per-stage timings.</span></li>
+              <li><strong>Inspect explainability</strong><span>Per-claim agent outputs, fraud signal breakdown, triage colour, and the full adjuster brief.</span></li>
+            </ol>
+          </div>
+          <div>
+            <h3 class="access-h">How a real claim flows</h3>
+            <ol class="walk-steps">
+              <li><strong>Claimant emails</strong><span>Policy number, incident date, description, and attachments — or you paste one from <code>test_data/</code>.</span></li>
+              <li><strong>Pipeline runs</strong><span>ClaimIQ starts the 7-stage pipeline; the claimant gets an instant confirmation, then mid-pipeline status updates.</span></li>
+              <li><strong>Adjuster receives the brief</strong><span>A full assessment email with a PDF guide and a Google Drive link to all documents.</span></li>
+              <li><strong>Human decides</strong><span>The adjuster submits the approval decision via the pre-filled <a href="https://docs.google.com/forms/d/14p1B6rH32q8Pf0iouEeWBcdRchyPUmVWY2xTJCv7xCU/viewform" target="_blank" rel="noopener">Google Form ↗</a> linked to the claim ID in BigQuery.</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <h3 class="access-h">Reviewer checklist <span id="ckCount" class="ck-count">0 / 8 done</span></h3>
+        <div class="ck-progress"><div id="ckFill"></div></div>
+        <div class="ck-grid" id="ckGrid">
+          <label class="ck-item"><input type="checkbox" data-ck="playground"><span>Run at least one playground scenario — the SIU one shows the guardrails best</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="liveapp"><span>Open the live Streamlit app and run a <code>test_data/</code> bundle end to end</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="fraudsim"><span>Toggle signals in the fraud score simulator (Documentation → Agents)</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="pipeline"><span>Step through the pipeline stage explorer (Documentation → Technical)</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="sysmap"><span>Zoom into a sub-system on the interactive system map and run its claim simulation</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="governance"><span>Review the seven governance guardrails and the injection-guard limits</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="drive"><span>Open the Drive folder with the real claim documents the pipeline ingests</span></label>
+          <label class="ck-item"><input type="checkbox" data-ck="form"><span>Check the adjuster approval Google Form that closes the human-decision loop</span></label>
+        </div>
+        <button id="ckReset" class="ghost-action ck-reset" type="button">Reset checklist</button>
+
+        <h3 class="access-h">Quick links</h3>
+        <div class="quick-links">
+          <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener"><b>Live Streamlit app</b><span>real 7-stage pipeline ↗</span></a>
+          <a href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener"><b>Claim documents</b><span>Google Drive evidence folder ↗</span></a>
+          <a href="https://datastudio.google.com/reporting/cc1bb8db-5fb5-4707-b3aa-5e851aa0e06f" target="_blank" rel="noopener"><b>Looker dashboard</b><span>live claim queue &amp; SLA monitoring ↗</span></a>
+          <a href="claimiq_system_map.html"><b>System map</b><span>interactive architecture</span></a>
+          <a href="#documentation"><b>Documentation</b><span>searchable reference</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>ClaimIQ</span>
+    <a class="footer-map" href="claimiq_system_map.html">Interactive System Map ↗</a>
+    <span>Agentic insurance claims workflow demo</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

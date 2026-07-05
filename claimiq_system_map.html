@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClaimIQ · Interactive System Map</title>
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#06060e; --panel:#0d0b1a; --panel2:#120e24; --line:#251d42;
+  --txt:#e8e4f4; --dim:#9f98b8; --faint:#6a6288;
+  --green:#22c55e; --blue:#3b82f6; --amber:#f59e0b; --teal:#14b8a6; --pink:#ec4899; --purple:#a142f4; --violet:#c084fc;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",system-ui,Arial,sans-serif;overflow:hidden}
+#bgfx{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(1000px 600px at 80% -10%, rgba(161,66,244,.13), transparent 60%),
+   radial-gradient(900px 700px at -10% 110%, rgba(236,72,153,.07), transparent 60%),
+   radial-gradient(700px 500px at 50% 50%, rgba(192,132,252,.05), transparent 60%);}
+#bgfx::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(192,132,252,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(192,132,252,.05) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:radial-gradient(ellipse at 50% 40%,#000 30%,transparent 75%);
+  animation:gridDrift 24s linear infinite}
+@keyframes gridDrift{to{background-position:44px 44px}}
+
+#app{position:relative;z-index:1;display:flex;height:100vh}
+
+/* ============ SIDEBAR ============ */
+#sidebar{width:264px;min-width:264px;height:100%;display:flex;flex-direction:column;
+  background:rgba(13,11,26,.88);backdrop-filter:blur(14px);border-right:1px solid var(--line)}
+#brand{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+#brand h1{font-size:17px;font-weight:800;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+#brand h1 .logomark{width:26px;height:26px;flex-shrink:0;filter:drop-shadow(0 0 10px rgba(161,66,244,.7));animation:brandPulse 2.6s ease-in-out infinite}
+@keyframes brandPulse{50%{filter:drop-shadow(0 0 18px rgba(192,132,252,.95))}}
+#brand p{font-size:10.5px;color:var(--faint);margin-top:4px;letter-spacing:.4px}
+#nav{flex:1;overflow-y:auto;padding:10px 10px 6px}
+#nav::-webkit-scrollbar{width:5px}#nav::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.navhead{font-size:9.5px;font-weight:700;color:var(--faint);letter-spacing:1.4px;padding:12px 10px 6px}
+.navitem{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;
+  font-size:12.5px;color:var(--dim);border:1px solid transparent;transition:all .18s;margin-bottom:2px;position:relative}
+.navitem:hover{background:rgba(161,66,244,.09);color:var(--txt);transform:translateX(3px)}
+.navitem.active{background:rgba(161,66,244,.14);border-color:rgba(161,66,244,.38);color:#ede9fe}
+.navitem.active::before{content:"";position:absolute;left:-10px;top:20%;height:60%;width:3px;border-radius:2px;background:var(--purple);box-shadow:0 0 8px var(--purple)}
+.navitem .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:9.5px;font-weight:800;flex-shrink:0;border:1px solid}
+.navitem.simhot .ic{animation:icPulse 1s ease-in-out infinite}
+@keyframes icPulse{50%{transform:scale(1.18);filter:brightness(1.6)}}
+#legend{padding:12px 14px;border-top:1px solid var(--line)}
+#legend h3{font-size:9.5px;font-weight:700;color:var(--faint);letter-spacing:1.4px;margin-bottom:8px}
+.lrow{display:flex;align-items:center;gap:9px;margin-bottom:6px;font-size:10.5px;color:var(--dim)}
+.lrow svg{flex-shrink:0}
+#simbtn{margin:12px 14px 16px;padding:12px;border:none;border-radius:11px;cursor:pointer;
+  font-size:13px;font-weight:800;letter-spacing:.3px;color:#fff;
+  background:linear-gradient(135deg,#a142f4,#7c3aed);
+  box-shadow:0 4px 20px rgba(161,66,244,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+#simbtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(161,66,244,.5)}
+#simbtn.running{background:linear-gradient(135deg,#f87171,#ec4899);color:#1c0410;box-shadow:0 4px 20px rgba(236,72,153,.4)}
+
+/* ============ STAGE ============ */
+#stage{flex:1;display:flex;flex-direction:column;min-width:0}
+#topbar{display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid var(--line);
+  background:rgba(13,11,26,.7);backdrop-filter:blur(10px)}
+#returnhome{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:8px;
+  font-size:11.5px;font-weight:800;color:#ede9fe;text-decoration:none;
+  background:rgba(161,66,244,.12);border:1px solid rgba(161,66,244,.36);transition:all .18s;white-space:nowrap}
+#returnhome:hover{background:rgba(161,66,244,.24);transform:translateX(-2px)}
+#backbtn{display:none;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;cursor:pointer;
+  font-size:11.5px;font-weight:700;color:#c084fc;background:rgba(161,66,244,.12);border:1px solid rgba(161,66,244,.35);transition:all .18s}
+#backbtn:hover{background:rgba(161,66,244,.25);transform:translateX(-2px)}
+#backbtn.show{display:flex}
+#crumb{font-size:11px;color:var(--faint);letter-spacing:.3px}
+#crumb b{color:var(--txt);font-weight:700}
+#viewtitle{font-size:15px;font-weight:800;margin-left:auto;background:linear-gradient(90deg,#e8e4f4,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+#viewport{flex:1;overflow:auto;position:relative;transition:transform .38s cubic-bezier(.5,0,.75,0),opacity .38s}
+#viewport::-webkit-scrollbar{width:8px;height:8px}#viewport::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+#viewport.zoomOut{transform:scale(1.9);opacity:0}
+#viewport.zoomIn{animation:zin .55s cubic-bezier(.16,1,.3,1)}
+@keyframes zin{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+#canvasHolder{padding:18px 22px 30px;min-height:100%}
+#canvas{width:100%;height:auto;display:block;max-width:1680px;margin:0 auto}
+
+/* SVG element styling */
+.band rect.bandbox{transition:filter .3s}
+.band{animation:bandIn .7s cubic-bezier(.16,1,.3,1) both}
+@keyframes bandIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.node{cursor:default}
+.node .nbox{transition:stroke .2s, filter .2s}
+.node:hover .nbox{stroke:#c084fc;filter:url(#softglow)}
+.node.linked{cursor:pointer}
+.node.linked .nbox{stroke-dasharray:none}
+.node.linked:hover .nbox{stroke:#fff;filter:url(#softglow)}
+.node.linked .zoomhint{opacity:0;transition:opacity .2s}
+.node.linked:hover .zoomhint{opacity:1}
+.node.linked .linkring{animation:linkBreath 3s ease-in-out infinite}
+@keyframes linkBreath{50%{opacity:.75}}
+.node.sim-on .nbox{stroke-width:2.4;filter:url(#glow)}
+.node.sim-on .simring{animation:simRing 1.1s ease-out infinite}
+@keyframes simRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.13)}}
+.simring{transform-box:fill-box;transform-origin:center;opacity:0}
+
+/* edge base animations */
+.e-green{}
+.e-blue{stroke-dasharray:7 7;animation:dashFlow 1.1s linear infinite}
+.e-amber{stroke-dasharray:9 8;animation:dashFlow 3.2s linear infinite, ambPulse 3.2s ease-in-out infinite}
+.e-teal{stroke-dasharray:6 7;animation:dashFlow 1.5s linear infinite}
+.e-pink{stroke-dasharray:5 6;animation:dashFlow 2s linear infinite, pinkFlash 2.4s ease-in-out infinite}
+@keyframes dashFlow{to{stroke-dashoffset:-30}}
+@keyframes ambPulse{50%{opacity:.45}}
+@keyframes pinkFlash{0%,78%,100%{opacity:.85}86%{opacity:.25}92%{opacity:1}}
+.elabel{font-size:9.5px;font-weight:700;letter-spacing:.2px}
+
+/* ============ SIM HUD — LIVE CLAIM LOG (docked at bottom, never overlaps diagram) ============ */
+#hud{flex-shrink:0;display:flex;align-items:stretch;overflow:hidden;
+  background:rgba(13,11,26,.96);backdrop-filter:blur(16px);border-top:1px solid rgba(161,66,244,.4);
+  box-shadow:0 -10px 34px rgba(0,0,0,.5);max-height:0;transition:max-height .45s cubic-bezier(.16,1,.3,1)}
+#hud.show{max-height:176px}
+#hud .hudtop{width:320px;min-width:320px;padding:12px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+#hudtag{font-size:9px;font-weight:800;letter-spacing:1.6px;color:var(--faint)}
+#hudphase{font-size:12.5px;font-weight:800;color:#c084fc;display:flex;align-items:center;gap:8px}
+#hudphase .live{width:8px;height:8px;border-radius:50%;background:#f87171;animation:liveBlink 1s infinite;flex-shrink:0}
+@keyframes liveBlink{50%{opacity:.25}}
+#huddesc{font-size:10.5px;color:var(--dim);line-height:1.45;flex:1}
+#hudbar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+#hudfill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--violet),var(--teal));transition:width .5s;box-shadow:0 0 10px rgba(161,66,244,.8)}
+#hudlog{flex:1;overflow-y:auto;padding:10px 16px;max-height:176px}
+#hudlog::-webkit-scrollbar{width:4px}#hudlog::-webkit-scrollbar-thumb{background:var(--line)}
+.logline{display:flex;gap:8px;align-items:flex-start;font-size:10.5px;color:var(--dim);padding:3.5px 0;
+  animation:logIn .3s both}
+@keyframes logIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.logline .ldot{width:7px;height:7px;border-radius:50%;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px currentColor}
+.logline .lt{color:#cbd5e1}
+.logline .lts{margin-left:auto;color:var(--faint);font-size:9px;flex-shrink:0;padding-top:1px}
+
+/* toast */
+#toast{position:absolute;bottom:22px;left:50%;transform:translate(-50%,80px);z-index:6;
+  padding:10px 22px;border-radius:99px;font-size:12.5px;font-weight:700;
+  background:rgba(13,11,26,.95);border:1px solid rgba(192,132,252,.5);color:#c084fc;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);transition:transform .45s cubic-bezier(.16,1,.3,1);pointer-events:none}
+#toast.show{transform:translate(-50%,0)}
+
+/* tooltip */
+#tip{position:fixed;z-index:9;pointer-events:none;max-width:320px;padding:11px 13px;border-radius:11px;
+  background:rgba(18,14,36,.98);border:1px solid rgba(161,66,244,.45);box-shadow:0 10px 34px rgba(0,0,0,.65);
+  font-size:11px;color:var(--dim);opacity:0;transition:opacity .12s;line-height:1.55}
+#tip b{color:var(--txt);font-size:12px;display:block;margin-bottom:3px}
+#tip .tdet{display:block;color:#cfc8e6;margin-bottom:5px}
+#tip .tchips{display:flex;flex-wrap:wrap;gap:4px}
+#tip .tchips span{padding:2px 7px;border-radius:99px;font-size:9px;font-weight:700;letter-spacing:.2px;
+  background:rgba(161,66,244,.12);border:1px solid rgba(161,66,244,.3);color:#c8b8ea}
+#tip .go{color:#c084fc;font-weight:700;margin-top:6px;display:block}
+
+@media (max-width:860px){#sidebar{width:210px;min-width:210px}}
+</style>
+</head>
+<body>
+<div id="bgfx"></div>
+<div id="app">
+  <aside id="sidebar">
+    <div id="brand">
+      <h1><svg class="logomark" viewBox="0 0 200 176" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs><linearGradient id="lgrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#a142f4"/>
+        </linearGradient></defs>
+        <path d="M 145.3 43.7 A 64 64 0 1 0 145.3 132.3" stroke="url(#lgrad)" stroke-width="30" stroke-linecap="round" fill="none"/>
+      </svg>ClaimIQ <span style="color:var(--violet);font-weight:600">AI</span></h1>
+      <p>AGENTIC CLAIMS · SYSTEM MAP</p>
+    </div>
+    <nav id="nav"></nav>
+    <div id="legend">
+      <h3>FLOW LEGEND</h3>
+      <div id="legendrows"></div>
+    </div>
+    <button id="simbtn">▶&nbsp; Simulate Live Claim</button>
+  </aside>
+  <main id="stage">
+    <div id="topbar">
+      <a id="returnhome" href="index.html" aria-label="Return to ClaimIQ home">← Return</a>
+      <div id="backbtn">← Global Map</div>
+      <div id="crumb"></div>
+      <div id="viewtitle"></div>
+    </div>
+    <div id="viewport"><div id="canvasHolder"><svg id="canvas" xmlns="http://www.w3.org/2000/svg"></svg></div></div>
+    <div id="hud">
+      <div class="hudtop">
+        <div id="hudtag">LIVE CLAIM LOG</div>
+        <div id="hudphase"><span class="live"></span><span id="hudphasetxt"></span></div>
+        <div id="huddesc"></div>
+        <div id="hudbar"><div id="hudfill"></div></div>
+      </div>
+      <div id="hudlog"></div>
+    </div>
+    <div id="toast"></div>
+  </main>
+</div>
+<div id="tip"></div>
+
+<script>
+/* ================= TOKENS ================= */
+const TOK={
+  green:{c:'#22c55e', label:'Primary Data Flow', anim:'particles'},
+  blue:{c:'#3b82f6', label:'Model Calls', anim:'pulse'},
+  amber:{c:'#f59e0b', label:'Evidence & Storage', anim:'packet'},
+  teal:{c:'#14b8a6', label:'Outputs', anim:'ripple'},
+  pink:{c:'#ec4899', label:'Control & Guardrails', anim:'flash'}
+};
+const BANDC={blue:'#3b82f6',green:'#22c55e',purple:'#a855f7',teal:'#14b8a6',pink:'#ec4899',amber:'#f59e0b'};
+
+/* ================= VIEW DATA ================= */
+/* n: [id, badge, title, [sublines], linkViewId?] */
+const VIEWS=[
+{id:'prototype',nav:'Prototype · Global Map',title:'ClaimIQ — Prototype Architecture · Agentic Claims Pipeline',group:'GLOBAL MAPS',icon:'GM',iconc:'#3b82f6',
+ rows:[
+  {n:'1',label:'Sources & Channels',color:'blue',desc:'Where claims enter and where humans watch',nodes:[
+    ['pr_c','C','Claimant',['claim email','documents + photos']],
+    ['pr_gm','GM','Gmail Mailbox',['IMAP unread poll','threaded replies']],
+    ['pr_ui','UI','Streamlit Console',['live logs','traceability JSON']],
+    ['pr_hr','HR','Adjuster / SIU',['human review','final authority']]]},
+  {n:'2',label:'Ingestion & Guardrails',color:'blue',desc:'Email parsing, extraction and injection defense',nodes:[
+    ['pr_py','PY','app/run.py',['watch / demo','claim id + dedupe']],
+    ['pr_em','EM','email_io.py',['IMAP read','SMTP send']],
+    ['pr_at','AT','attachments.py',['extract files:','text, PDF, image, DOCX']],
+    ['pr_iv','IV','InputValidator',['size + format','prompt-injection scan']]]},
+  {n:'3',label:'Agent Orchestration',color:'green',desc:'Six agents run in dependency order over shared session state',nodes:[
+    ['pr_00','00','Pipeline Orchestrator',['session flow','timed agent stages'],'orchestrator'],
+    ['pr_s','S','ClaimSession',['versioned state:','guard, route, outputs']],
+    ['pr_mg','MG','Mail Guard',['front-door gate','rewrite request'],'mailguard'],
+    ['pr_r','R','Router',['fast path','dependency order'],'router'],
+    ['pr_rt','RT','Shared Runtime',['config, audit','openai_client']]],
+   nodes2:[
+    ['pr_01','01','Intake',['multimodal extraction','30+ field contract'],'intake'],
+    ['pr_03','03','Coverage',['policy evidence','compliance guardrail'],'coverage'],
+    ['pr_04','04','Fraud',['SIU signals','deterministic score'],'fraud'],
+    ['pr_05','05','Triage',['SLA + routing','hard overrides'],'triage'],
+    ['pr_06','06','Copilot',['employee brief','never decides'],'copilot']]},
+  {n:'4',label:'OpenAI Intelligence',color:'purple',desc:'Model layer with strict JSON and deterministic fallbacks',nodes:[
+    ['pr_json','AI','OpenAI JSON Layer',['Responses API','strict object outputs']],
+    ['pr_vis','VM','Vision Models',['images','scanned PDF page']],
+    ['pr_res','RM','Reasoning Models',['agent synthesis','router ambiguity']],
+    ['pr_fbr','FR','Fallback Rules',['deterministic extract','safe triage']]]},
+  {n:'5',label:'Evidence & Data Plane',color:'amber',desc:'Where policies, claims and artifacts live',nodes:[
+    ['pr_bq','BQ','Google BigQuery',['policies','claims + audit']],
+    ['pr_gd','GD','Google Drive',['claim folders','attachments + PDFs']],
+    ['pr_pdf','PP','Policy PDFs',['local docs','catalog fallback']],
+    ['pr_lo','LO','Local Outputs',['email_output','report artifacts']]]},
+  {n:'6',label:'Outputs & Human Loop',color:'teal',desc:'Customer updates, reports and the approval gate',nodes:[
+    ['pr_sm','SM','SMTP Email Updates',['received; coverage,','fraud, route']],
+    ['pr_rep','PDF','PDF Report',['ClaimIQ report','adjuster guide']],
+    ['pr_con','UI','Prototype Console',['agent outputs','terminal stream']],
+    ['pr_ok','OK','Approval Gate',['high risk','high value']]]},
+  {n:'7',label:'Safety & Observability',color:'pink',desc:'Audit, schema guards and the human authority rule',nodes:[
+    ['pr_audit','AT','Audit Trail',['event + agent rows','timings']],
+    ['pr_sch','SG','Schema Guards',['normalizers','JSON retry']],
+    ['pr_sec','SF','Secrets + Flags',['.env controls','safe local mode']],
+    ['pr_hum','HA','Human Authority',['AI assists','humans decide']]]}],
+ edges:[
+  ['pr_c','pr_gm','green'],['pr_gm','pr_em','green'],['pr_c','pr_py','green'],
+  ['pr_py','pr_em','green'],['pr_em','pr_at','green'],['pr_at','pr_iv','green'],
+  ['pr_py','pr_00','green','start pipeline'],['pr_00','pr_s','green','set state'],
+  ['pr_s','pr_mg','green'],['pr_mg','pr_r','green','after intake'],['pr_r','pr_rt','green'],
+  ['pr_01','pr_03','green'],['pr_03','pr_04','green'],['pr_04','pr_05','green'],['pr_05','pr_06','green'],
+  ['pr_01','pr_vis','blue'],['pr_03','pr_json','blue'],['pr_04','pr_res','blue'],['pr_06','pr_fbr','blue'],
+  ['pr_json','pr_bq','amber'],['pr_vis','pr_gd','amber'],['pr_res','pr_pdf','amber'],['pr_fbr','pr_lo','amber'],
+  ['pr_bq','pr_sm','teal'],['pr_sm','pr_rep','teal'],['pr_rep','pr_con','teal'],['pr_con','pr_ok','teal'],
+  ['pr_ok','pr_hr','pink','escalation'],
+  ['pr_audit','pr_sch','pink'],['pr_sch','pr_sec','pink'],['pr_sec','pr_hum','pink']]},
+
+{id:'production',nav:'Production Pipeline',title:'ClaimIQ — Production Architecture · OpenAI Agentic Pipeline',group:'GLOBAL MAPS',icon:'PR',iconc:'#a855f7',
+ rows:[
+  {n:'1',label:'Sources & Channels',color:'blue',desc:'Claim entry channels and human reviewers',nodes:[
+    ['q_c','C','Claimant',['submit claim','email + attachments']],
+    ['q_gm','GM','Gmail Mailbox',['IMAP','unread poll']],
+    ['q_hr','HR','Adjuster / SIU',['reviews','approves']]]},
+  {n:'2',label:'Ingestion & Guardrails',color:'blue',desc:'Parse, extract, classify and validate every input',nodes:[
+    ['q_py','PY','app/run.py',['poll · watch · demo']],
+    ['q_em','EM','email_io.py',['IMAP read','SMTP send']],
+    ['q_at','AT','attachments.py',['extract + classify','(vision + text)']],
+    ['q_iv','IV','InputValidator',['size · format','injection scan']]]},
+  {n:'3',label:'Agent Orchestration',color:'green',desc:'Session-based agent pipeline with enforced order',nodes:[
+    ['q_00','PO','Pipeline Orchestrator',['session-based','dependency order'],'orchestrator'],
+    ['q_s','CS','ClaimSession',['select agents','immutable · versioned']],
+    ['q_mg','00','Mail Guard',['4 required fields','rewrite'],'mailguard'],
+    ['q_r','02','Router',['fast-path','LLM select'],'router'],
+    ['q_rt','RT','Shared Runtime',['config · audit','openai + google clients']]],
+   nodes2:[
+    ['q_01','01','Intake',['30+ assessment fields','deterministic fallback'],'intake'],
+    ['q_03','03','Coverage',['infer policy · itemize','deterministic fallback'],'coverage'],
+    ['q_04','04','Fraud',['evidence + PDF → score','immutable before LLM'],'fraud'],
+    ['q_05','05','Triage',['adjuster guide · routing','hard emergency override'],'triage'],
+    ['q_06','06','Copilot',['multi-role brief · letters','assists, never decides'],'copilot']]},
+  {n:'4',label:'OpenAI Intelligence Layer',color:'purple',desc:'Right-sized models per task with structured outputs',nodes:[
+    ['q_api','AI','OpenAI Responses API',['structured JSON','deterministic fallback']],
+    ['q_4o','4o','gpt-4o-mini',['text · vision']],
+    ['q_o4','o4','o4-mini',['agent reasoning']],
+    ['q_55','55','gpt-5.5',['router · orchestrator']]]},
+  {n:'5',label:'Google Cloud Data Plane',color:'amber',desc:'BigQuery, Drive, Forms and Looker analytics',nodes:[
+    ['q_bq','BQ','Google BigQuery',['claim_master · outputs','audit_trail · policies']],
+    ['q_gd','GD','Google Drive',['attachments +','adjuster PDF']],
+    ['q_gf','GF','Google Forms',['decision → BigQuery']],
+    ['q_ls','LS','Looker Studio',['reads BigQuery views']]]},
+  {n:'6',label:'Notifications & Human Loop',color:'teal',desc:'Emails, approval gate, console and reviewer site',nodes:[
+    ['q_sm','SM','SMTP Email Updates',['ack · coverage · fraud','assessment + PDF']],
+    ['q_ag','AG','Approval Gate',['mandatory for high-risk','and high-value claims']],
+    ['q_st','UI','Streamlit Console',['traceability JSON','live logs · timings']],
+    ['q_rw','WW','Reviewer Website',['static site','playground + docs']]]},
+  {n:'7',label:'Security & Observability',color:'pink',desc:'Audit, IAM, logging and human authority',nodes:[
+    ['q_au','AT','Audit Trail',['logs every','agent decision']],
+    ['q_iam','IAM','IAM · Secrets',['.env credential','isolation']],
+    ['q_cl','CL','Cloud Logging',['durations','statuses']],
+    ['q_ha','HA','Human Authority',['AI assists,','never decides']]]}],
+ edges:[
+  ['q_c','q_py','green','submit claim'],['q_gm','q_em','green','unread poll'],
+  ['q_py','q_em','green'],['q_em','q_at','green'],['q_at','q_iv','green'],
+  ['q_py','q_00','green','start pipeline'],['q_00','q_s','green','select agents'],
+  ['q_s','q_mg','green'],['q_mg','q_r','green','route'],['q_r','q_rt','green'],
+  ['q_01','q_03','green','brief + report'],['q_03','q_04','green','evidence + PDF'],
+  ['q_04','q_05','green','route'],['q_05','q_06','green'],
+  ['q_01','q_4o','blue'],['q_03','q_api','blue'],['q_04','q_o4','blue'],['q_06','q_55','blue'],
+  ['q_api','q_bq','amber','write claim + audit'],['q_bq','q_gd','amber'],['q_gd','q_gf','amber'],['q_gf','q_ls','amber','reads views'],
+  ['q_bq','q_sm','teal'],['q_sm','q_ag','teal'],['q_ag','q_st','teal'],['q_st','q_rw','teal'],
+  ['q_ag','q_hr','pink','human verdict'],
+  ['q_au','q_iam','pink'],['q_iam','q_cl','pink'],['q_cl','q_ha','pink']]},
+
+{id:'mailguard',nav:'Mail Guard',title:'ClaimIQ — Mail Guard Architecture',group:'SUB-SYSTEMS',icon:'00',iconc:'#ec4899',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['m_sb','SB','Subject',['email subject','thread context']],
+    ['m_txt','TXT','Email Body',['free-form claim','customer text']],
+    ['m_dt','DT','Current Date',['future-date check','UTC date']],
+    ['m_req','REQ','Required Fields',['name, policy','date, place, details']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['m_p','P','Guard Prompt',['binary proceed/rewrite','spam + vague inquiry','single-claim quality']],
+    ['m_ai','AI','OpenAI Path',['generate.json','fixed schema']],
+    ['m_n','N','Normalize Result',['action defaults','rewrite template','empty text guard']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['m_fb','FB','Deterministic Guard',['keyword density','policy/date regex','general inquiry catch']],
+    ['m_fd','FD','Date Correction',['ordinal dates','non-future override','avoid false stop']],
+    ['m_d','D','Guard Decision',['proceed','rewrite_request']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['m_go','GO','Proceed To Intake',['orchestrator continues','audit completed']],
+    ['m_rw','RW','Rewrite Reply',['structured form','missing fields']],
+    ['m_st','ST','Pipeline Stop',['status rewrite_required','customer resubmits']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['m_bd','BD','Boundary',['no coverage/fraud','front-door only']],
+    ['m_au','AU','Traceability',['reason + confidence','missing fields']],
+    ['m_sf','SF','Safety Posture',['reject spam/vague','accept complete claims']]]}],
+ edges:[
+  ['m_sb','m_txt','green'],['m_txt','m_dt','green'],['m_dt','m_req','green'],
+  ['m_txt','m_p','green'],['m_p','m_ai','blue'],['m_ai','m_n','green'],
+  ['m_ai','m_fb','blue','on error'],['m_fb','m_fd','green'],['m_fd','m_d','green'],['m_n','m_d','green'],
+  ['m_d','m_go','pink','proceed'],['m_d','m_rw','teal','rewrite'],['m_rw','m_st','green'],
+  ['m_go','m_bd','pink'],['m_rw','m_au','pink'],['m_st','m_sf','pink']]},
+
+{id:'intake',nav:'Intake Agent · 01',title:'ClaimIQ — Intake Architecture',group:'SUB-SYSTEMS',icon:'01',iconc:'#22c55e',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['i_em','EM','Claim Email',['free-form text','6000 char prompt cap']],
+    ['i_up','UP','Uploaded Docs',['bytes + mime','images, PDF, text']],
+    ['i_ds','DS','Existing Summary',['attachments.py output','optional context']],
+    ['i_js','JS','Strict Schema',['30+ fields','no extra keys']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['i_m','M','Modality Split',['image → vision','PDF/text → text','scanned PDF render']],
+    ['i_pd','PD','Per-Document JSON',['document.type','fields, quality','risk signals']],
+    ['i_mg','MG','Merge Summaries',['dedupe filenames','preserve risk','modalities']],
+    ['i_ai','AI','Reasoning Extract',['claim facts','conflicts','next agent hint']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['i_fb','FB','Deterministic Extract',['policy/date/amount','document aliases','claim type']],
+    ['i_en','EN','Enrich Contract',['backfill fields','missing info logic','risk merge']],
+    ['i_rc','RC','Reconcile Result',['amount promotion','document evidence','status correction']],
+    ['i_st','ST','Status Gate',['complete','needs_review','incomplete']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['i_out','OUT','Structured Claim',['claimant, policy','date, amount, type']],
+    ['i_doc','DOC','Documents Summary',['per document','quality + signals']],
+    ['i_r','R','Router Input',['intake_status','missing docs']],
+    ['i_siu','SIU','Fraud Evidence',['risk_indicators','document signals']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['i_bd','BD','Boundary',['extract facts only','no adjudication']],
+    ['i_q','Q','Quality Gate',['missing docs','low confidence']],
+    ['i_au','AU','Audit Output',['agent_started','agent_completed']]]}],
+ edges:[
+  ['i_em','i_m','green'],['i_up','i_m','green'],['i_ds','i_mg','green'],['i_js','i_ai','green'],
+  ['i_m','i_pd','blue'],['i_pd','i_mg','green'],['i_mg','i_ai','blue'],
+  ['i_ai','i_fb','blue','on error'],['i_fb','i_en','green'],['i_en','i_rc','green'],['i_rc','i_st','green'],['i_ai','i_en','green'],
+  ['i_st','i_out','teal'],['i_out','i_doc','teal'],['i_doc','i_r','teal'],['i_r','i_siu','teal'],
+  ['i_out','i_bd','pink'],['i_doc','i_q','pink'],['i_r','i_au','pink']]},
+
+{id:'router',nav:'Router Agent · 02',title:'ClaimIQ — Router Architecture',group:'SUB-SYSTEMS',icon:'02',iconc:'#3b82f6',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['r_s','S','ClaimSession',['snapshot','outputs + docs']],
+    ['r_in','01','Intake Output',['status','missing info']],
+    ['r_env','ENV','Router Flags',['ROUTER_ALWAYS_LLM','model env vars']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['r_pa','PA','Pause Check',['intake_status incomplete','no downstream agents','customer doc request']],
+    ['r_fp','FP','Deterministic Fast Path',['complete/needs_review','select all four agents']],
+    ['r_ai','AI','Ambiguous LLM Path',['choose_with_openai','session snapshot']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['r_fb','FB','Fallback Route',['policy present','risk/amount/date','human review if sparse']],
+    ['r_dep','DEP','Dependency Enforcer',['triage needs coverage+fraud','copilot needs triage']],
+    ['r_n','N','Normalize Route',['next_agent','claim_status','confidence']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['r_sel','SEL','selected_agents',['coverage, fraud','triage, copilot']],
+    ['r_req','REQ','Document Request',['pending_customer_docs','missing_inputs']],
+    ['r_lo','LO','Orchestrator Loop',['runs in order','records timing']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['r_bd','BD','Boundary',['selects agents only','does not adjudicate']],
+    ['r_dt','DT','Cost Control',['skip LLM on fixed policy','LLM only ambiguous']],
+    ['r_au','AU','Audit',['route_selected','reason + confidence']]]}],
+ edges:[
+  ['r_s','r_in','green'],['r_in','r_env','green'],['r_in','r_pa','green'],
+  ['r_pa','r_fp','green','not incomplete'],['r_fp','r_ai','blue','if forced/ambiguous'],
+  ['r_pa','r_fb','blue','on error'],['r_fp','r_dep','green'],['r_ai','r_dep','green'],
+  ['r_fb','r_dep','green'],['r_dep','r_n','green'],
+  ['r_fb','r_sel','teal'],['r_sel','r_req','teal'],['r_req','r_lo','teal'],
+  ['r_dep','r_req','pink'],['r_n','r_lo','pink'],
+  ['r_sel','r_bd','pink'],['r_req','r_dt','pink'],['r_lo','r_au','pink']]},
+
+{id:'orchestrator',nav:'Orchestrator Loop',title:'ClaimIQ — Orchestrator Architecture',group:'SUB-SYSTEMS',icon:'PO',iconc:'#f59e0b',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['o_in','IN','Caller',['app/run.py or CLI','claim_id + email']],
+    ['o_doc','DOC','Document Context',['documents_summary','uploaded_documents']],
+    ['o_cfg','CFG','Runtime Options',['send_emails','thread id']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['o_s','S','ClaimSession',['frozen state object','guard, route, outputs','timings + errors']],
+    ['o_iv','IV','InputValidator',['non-fatal validation','rewrite on bad input']],
+    ['o_au','AU','Audit Start',['pipeline_started','stage events']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['o_mg','MG','Mail Guard',['evaluate email','stop if rewrite'],'mailguard'],
+    ['o_it','01','Intake',['extract claim facts','pause if error'],'intake'],
+    ['o_rt','R','Router',['selected_agents','dependency order'],'router'],
+    ['o_lp','SL','Stage Loop',['coverage → fraud','triage → copilot']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['o_sm','SM','Stage Emails',['coverage update','fraud alert route']],
+    ['o_pdf','PDF','Conditional PDF',['human approval','risk/value triggers']],
+    ['o_out','OUT','Pipeline Summary',['workflow_state','outputs + errors']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['o_ha','HA','Human Boundary',['AI assists only','no final settlement']],
+    ['o_tm','TM','Per-Agent Timing',['started/completed','duration_ms']],
+    ['o_af','AF','Audit Finish',['pipeline_completed','report flag']]]}],
+ edges:[
+  ['o_in','o_s','green'],['o_doc','o_s','green'],['o_cfg','o_s','green'],
+  ['o_s','o_iv','green'],['o_iv','o_au','green'],
+  ['o_s','o_mg','green'],['o_mg','o_it','pink','proceed'],['o_it','o_rt','green'],['o_rt','o_lp','green'],
+  ['o_lp','o_sm','teal'],['o_sm','o_pdf','teal'],['o_pdf','o_out','teal'],
+  ['o_mg','o_sm','pink','rewrite / stop'],
+  ['o_sm','o_ha','pink'],['o_pdf','o_tm','pink'],['o_out','o_af','pink'],
+  ['o_s','o_au','amber','stage events']]},
+
+{id:'coverage',nav:'Coverage Agent · 03',title:'ClaimIQ — Coverage Architecture',group:'SUB-SYSTEMS',icon:'03',iconc:'#14b8a6',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['c_in','01','Intake Facts',['policy, type, date','amount + documents']],
+    ['c_pol','POL','Policy Number',['customer policy id','reference profile id']],
+    ['c_cfg','CFG','Catalog Source',['bigquery/local/auto','policy docs']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['c_bq','BQ','Policy Lookup',['BigQuery policies','safe empty fallback']],
+    ['c_cat','CAT','Policy Catalog',['policy.documents table','local PDF fallback']],
+    ['c_ev','E','Evidence Builder',['claim-type match','section snippets','search terms']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['c_ref','REF','Reference Policy',['sample profile','only with citation']],
+    ['c_ai','AI','Coverage Reasoner',['policy-only logic','limits + exclusions','strict JSON']],
+    ['c_fb','FB','Deterministic Coverage',['active dates','covered peril','waiting period']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['c_ir','IR','Compliance Guard',['citations required','appeals process']],
+    ['c_cal','CAL','Calculation Method',['sum insured','deductible, limits']],
+    ['c_out','OUT','Coverage Output',['covered/not/needs_review','manual review flag']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['c_bd','BD','Boundary',['coverage only','no fraud or triage']],
+    ['c_dn','DN','Denial Safeguard',['specific clause required','no prohibited basis']],
+    ['c_au','AU','Audit',['agent output','duration_ms']]]}],
+ edges:[
+  ['c_in','c_pol','green'],['c_pol','c_cfg','green'],
+  ['c_in','c_bq','amber'],['c_pol','c_cat','amber'],
+  ['c_bq','c_cat','green'],['c_cat','c_ev','green'],['c_bq','c_ref','green'],
+  ['c_ev','c_ai','blue'],['c_ai','c_fb','blue','fallback if error'],
+  ['c_ai','c_ir','green'],['c_fb','c_cal','green'],
+  ['c_ir','c_cal','green'],['c_cal','c_out','teal'],
+  ['c_ir','c_dn','pink'],['c_out','c_au','pink'],['c_ref','c_bd','pink']]},
+
+{id:'fraud',nav:'Fraud Agent · 04',title:'ClaimIQ — Fraud Architecture',group:'SUB-SYSTEMS',icon:'04',iconc:'#ef4444',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['f_ev','01','Intake Evidence',['facts + docs','risk indicators']],
+    ['f_cov','03','Coverage Context',['policy dates','limits']],
+    ['f_id','ID','Claim ID',['exclude self','duplicate lookup']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['f_dup','BQ','Duplicate Lookup',['claims_master','same sender/type/date','90 day window']],
+    ['f_sig','SIG','Signal Engine',['weights by claim type','identity, timeline','document, billing']],
+    ['f_wl','WL','Benchmarks + Watchlists',['provider risk','price outliers']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['f_sc','100','Deterministic Score',['cap at 100','risk_level','recommended_action']],
+    ['f_ai','AI','SIU Explanation',['do not rescore','explain evidence','no accusation']],
+    ['f_fb','FB','Deterministic Brief',['if OpenAI fails','same score/action']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['f_out','OUT','Fraud Output',['score, level','signals + duplicates']],
+    ['f_act','ACT','Investigation Action',['continue, request docs','refer, hold pending SIU']],
+    ['f_tri','05','Triage Input',['fraud_score','human approval reasons']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['f_bd','BD','Boundary',['investigation priority','not final fraud finding']],
+    ['f_lk','LK','Immutable Scoring',['LLM cannot change','signals preserved']],
+    ['f_au','AU','Audit',['agent_completed','fraud_score']]]}],
+ edges:[
+  ['f_ev','f_cov','green'],['f_cov','f_id','green'],
+  ['f_id','f_dup','amber','evidence'],['f_dup','f_sig','green'],['f_wl','f_sig','green'],
+  ['f_sig','f_sc','green'],['f_sc','f_ai','blue'],['f_ai','f_fb','blue','on error'],
+  ['f_sc','f_out','green'],['f_fb','f_act','green'],
+  ['f_out','f_act','teal'],['f_act','f_tri','teal'],
+  ['f_out','f_bd','pink'],['f_sc','f_lk','pink'],['f_tri','f_au','pink']]},
+
+{id:'triage',nav:'Triage Agent · 05',title:'ClaimIQ — Triage Architecture',group:'SUB-SYSTEMS',icon:'05',iconc:'#f97316',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',nodes:[
+    ['t_in','01','Intake',['claim type','clinical facts']],
+    ['t_cov','03','Coverage',['status','manual review']],
+    ['t_fr','04','Fraud',['score','signals']]]},
+  {n:'2',label:'Core Processing',color:'green',nodes:[
+    ['t_hr','HR','Approval Reasons',['high fraud','coverage review','high value/type']],
+    ['t_cl','CL','Clinical Assessment',['emergency terms','vitals','specialist mapping']],
+    ['t_nm','NM','Non-Medical Urgency',['total loss','stranded/displaced','domain reviewer']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',nodes:[
+    ['t_ai','AI','Triage Synthesis',['UM reviewer role','clinical urgency','not coverage/fraud']],
+    ['t_fb','FB','Safe Triage',['hard-rule fallback','SLA map','priority/color']],
+    ['t_ov','OV','Hard Overrides',['no downgrades','emergency stays red','medical docs request']]]},
+  {n:'4',label:'Outputs',color:'teal',nodes:[
+    ['t_out','OUT','Routing Output',['route + priority','triage_color']],
+    ['t_sla','SLA','SLA + Specialist',['sla_hours','reviewer type']],
+    ['t_ok','OK','Human Approval',['required flag','reason list']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',nodes:[
+    ['t_bd','BD','Boundary',['does not decide coverage','does not decide fraud']],
+    ['t_fl','FL','Clinical Flags',['mismatch, vitals','missing evidence']],
+    ['t_au','AU','Audit',['routing payload','duration_ms']]]}],
+ edges:[
+  ['t_in','t_cov','green'],['t_cov','t_fr','green'],
+  ['t_in','t_hr','green'],['t_in','t_cl','green'],['t_cl','t_nm','green'],
+  ['t_hr','t_ai','blue'],['t_ai','t_fb','blue','fallback if error'],
+  ['t_cl','t_fb','green'],['t_fb','t_ov','green'],['t_nm','t_ov','green'],
+  ['t_fb','t_out','green'],['t_out','t_sla','green'],['t_sla','t_ok','green'],
+  ['t_ov','t_ok','pink'],['t_sla','t_fl','pink'],['t_ok','t_au','pink'],['t_out','t_bd','pink']]},
+
+{id:'copilot',nav:'Copilot Agent · 06',title:'ClaimIQ — Copilot Architecture',group:'SUB-SYSTEMS',icon:'06',iconc:'#a855f7',
+ rows:[
+  {n:'1',label:'Inputs',color:'blue',desc:'Claims data enters the copilot pipeline',nodes:[
+    ['p_in','01','Intake',['claim facts','documents']],
+    ['p_cov','03','Coverage',['policy position','citations']],
+    ['p_fr','04','Fraud',['signals','risk action']],
+    ['p_tr','05','Triage',['route','SLA + approval']]]},
+  {n:'2',label:'Core Processing',color:'green',desc:'Copilot synthesizes insights and evidence',nodes:[
+    ['p_ai','AI','Brief Synthesis',['employee copilot','strict JSON','use supplied outputs']],
+    ['p_fb','FB','Fallback Brief',['claim details','coverage/fraud/routing','open questions']],
+    ['p_ev','EV','Evidence Log',['agent status','completed_at']]]},
+  {n:'3',label:'Decision & Fallbacks',color:'purple',desc:'Copilot drafts and recommends — never decides',nodes:[
+    ['p_en','EN','Enrich Contract',['citations','plain English','role assistance']],
+    ['p_tl','TL','Timeline + Next Steps',['claim chronology','missing items','review actions']],
+    ['p_lt','LT','Generated Drafts',['document request','hospital clarification','internal note']]]},
+  {n:'4',label:'Outputs',color:'teal',desc:'Copilot delivers actionable outputs for humans',nodes:[
+    ['p_md','MD','Adjuster Markdown',['human boundary','claim snapshot']],
+    ['p_pdf','PDF','Report Input',['PDF sections','evidence/citations']],
+    ['p_to','TO','Recommended Tools',['RAG, calculator','letters, timeline']]]},
+  {n:'5',label:'Safety & Traceability',color:'pink',desc:'Humans decide. Copilot never approves, denies, or settles.',nodes:[
+    ['p_bd','BD','Decision Boundary',['does not approve','does not deny/settle']],
+    ['p_rl','RL','Role Views',['claims, SIU','medical, audit']],
+    ['p_au','AU','Audit',['agent_completed','triage_color']]]}],
+ edges:[
+  ['p_in','p_cov','green'],['p_cov','p_fr','green'],['p_fr','p_tr','green'],
+  ['p_cov','p_ai','blue'],['p_ai','p_fb','blue','on error'],['p_fb','p_ev','green'],
+  ['p_ai','p_en','green'],['p_en','p_tl','green'],['p_tl','p_lt','green'],
+  ['p_en','p_md','pink'],['p_md','p_pdf','teal'],['p_pdf','p_to','teal'],
+  ['p_md','p_bd','pink'],['p_to','p_au','pink']]}
+];
+
+/* ================= NODE DETAILS (shown on hover) ================= */
+const DETAILS={
+/* — Prototype global map — */
+pr_c:'The policyholder. Submits a free-form claim email with documents and photos attached — the raw input for the entire pipeline.',
+pr_gm:'Gmail inbox polled over IMAP for unread claim emails. Replies stay in the same thread so the customer sees one conversation.',
+pr_ui:'Streamlit operator console streaming live pipeline logs and the full traceability JSON for every claim run.',
+pr_hr:'Human adjuster or SIU investigator. Reviews AI output and holds final authority — no claim settles without them.',
+pr_py:'Pipeline entrypoint. Runs in watch or demo mode, assigns claim IDs and dedupes repeat emails before processing.',
+pr_em:'Email I/O module — reads claims over IMAP and sends customer status updates over SMTP.',
+pr_at:'Attachment extractor. Pulls text, PDFs, images and DOCX files out of the email and normalizes them for the agents.',
+pr_iv:'First guardrail: validates size and format and scans inbound text for prompt-injection attempts before any LLM sees it.',
+pr_00:'The conductor. Creates the ClaimSession, runs agents in dependency order and times every stage.',
+pr_s:'Versioned, immutable state object holding the guard decision, route, agent outputs and errors for one claim.',
+pr_mg:'Front-door gate. Rejects spam and vague inquiries and asks the customer to rewrite incomplete claims.',
+pr_r:'Decides which agents run. Deterministic fast path for clear claims, LLM only for ambiguous ones.',
+pr_rt:'Shared runtime injected into all agents: config, audit logger and the OpenAI client.',
+pr_01:'Multimodal extraction of the claim into a strict 30+ field contract — text, images and scanned PDFs.',
+pr_03:'Matches the claim against real policy evidence with a compliance guardrail requiring clause citations.',
+pr_04:'Deterministic fraud scoring plus SIU signals — the LLM explains the score but can never change it.',
+pr_05:'Assigns urgency, SLA and routing with hard overrides so emergencies are never downgraded.',
+pr_06:'Builds the adjuster brief, timeline and draft letters. Recommends only — never decides.',
+pr_json:'OpenAI Responses API wrapper enforcing strict JSON object outputs with schema retry on malformed replies.',
+pr_vis:'Vision models read photos and scanned PDF pages — damage photos, hospital bills, handwritten forms.',
+pr_res:'Reasoning models handle agent synthesis and ambiguous routing decisions.',
+pr_fbr:'Deterministic fallback rules keep the pipeline alive when the API fails: regex extraction and safe triage defaults.',
+pr_bq:'BigQuery stores policies, claim records and the append-only audit trail.',
+pr_gd:'Google Drive keeps a folder per claim with all attachments and generated PDFs.',
+pr_pdf:'Local policy PDF documents used as a catalog fallback when BigQuery is unavailable.',
+pr_lo:'Local output folder capturing sent emails and report artifacts for inspection.',
+pr_sm:'Automated SMTP updates at each stage: received, coverage result, fraud alert and final route.',
+pr_rep:'Generated ClaimIQ PDF report — the adjuster guide with evidence, citations and recommendations.',
+pr_con:'Prototype console streaming agent outputs to the terminal in real time.',
+pr_ok:'Mandatory approval gate for high-risk or high-value claims before anything is finalized.',
+pr_audit:'Every event and agent decision is logged with timings — a fully replayable trail per claim.',
+pr_sch:'Schema guards normalize LLM output and retry malformed JSON so downstream code never breaks.',
+pr_sec:'Secrets and feature flags live in .env — safe local mode runs without cloud credentials.',
+pr_hum:'The core principle: AI assists, humans decide. No agent can approve, deny or settle a claim.',
+/* — Production global map — */
+q_c:'Policyholder submitting the claim by email with attachments — the start of every pipeline run.',
+q_gm:'Gmail mailbox polled over IMAP for unread claim emails.',
+q_hr:'Adjuster / SIU reviewer — the final human authority on every claim.',
+q_py:'Production entrypoint supporting poll, watch and demo modes.',
+q_em:'IMAP reader and SMTP sender handling all customer email traffic.',
+q_at:'Extracts and classifies attachments using vision for images and text parsing for documents.',
+q_iv:'Validates size and format and scans for prompt injection before the pipeline starts.',
+q_00:'Session-based orchestrator running agents in dependency order with per-stage timing.',
+q_s:'Immutable, versioned session state — agents read snapshots and never mutate shared state.',
+q_mg:'Front-door guard checking the 4 required fields; incomplete claims get a structured rewrite request.',
+q_r:'Fast-path router with LLM selection only for ambiguous claims — a deliberate cost control.',
+q_rt:'Shared runtime: config, audit logger, OpenAI and Google clients.',
+q_01:'Extracts 30+ assessment fields from multimodal input with a deterministic fallback.',
+q_03:'Infers the policy, itemizes coverage and falls back deterministically on API failure.',
+q_04:'Builds evidence and the policy PDF into a deterministic score that is immutable before the LLM runs.',
+q_05:'Produces the adjuster guide and routing with a hard emergency override.',
+q_06:'Multi-role briefs and draft letters — assists staff, never makes decisions.',
+q_api:'OpenAI Responses API with structured JSON outputs and deterministic fallback on failure.',
+q_4o:'gpt-4o-mini handles high-volume text and vision extraction — fast and cost-efficient.',
+q_o4:'o4-mini provides deeper reasoning for agent synthesis.',
+q_55:'gpt-5.5 powers the router and orchestrator where judgment matters most.',
+q_bq:'BigQuery datasets: claim_master, agent outputs, audit_trail and policies.',
+q_gd:'Google Drive folder per claim holding attachments and the adjuster PDF.',
+q_gf:'Google Forms captures the human decision and writes it back to BigQuery.',
+q_ls:'Looker Studio dashboards read BigQuery views for portfolio-level analytics.',
+q_sm:'Automated emails: acknowledgement, coverage result, fraud alert and final assessment with PDF.',
+q_ag:'Mandatory human approval gate for high-risk and high-value claims.',
+q_st:'Streamlit console with traceability JSON, live logs and stage timings.',
+q_rw:'Static reviewer website with playground and documentation for judges and stakeholders.',
+q_au:'Append-only audit trail logging every agent decision with inputs and outputs.',
+q_iam:'IAM roles and .env secrets keep credentials isolated from code.',
+q_cl:'Cloud Logging records stage durations and statuses for operations.',
+q_ha:'Human authority principle — AI assists, never decides.',
+/* — Mail Guard — */
+m_sb:'Email subject line plus thread context — the first signal of what the message is about.',
+m_txt:'The raw free-form claim text written by the customer.',
+m_dt:'Current UTC date, used to catch claims dated in the future.',
+m_req:'The four required fields every valid claim needs: name, policy number, incident date and place, and details.',
+m_p:'Single guard prompt producing a binary proceed / rewrite decision — filters spam, vague inquiries and multi-claim emails.',
+m_ai:'Structured OpenAI call (generate.json) with a fixed response schema.',
+m_n:'Normalizes the model result: default actions, rewrite template, guard against empty text.',
+m_fb:'Deterministic fallback guard using keyword density and policy/date regex if the API call fails.',
+m_fd:'Date correction pass — parses ordinal dates and overrides false future-date stops.',
+m_d:'The final gate decision: proceed to intake or request a rewrite.',
+m_go:'Claim is complete — handed to the orchestrator and the audit marks the guard stage done.',
+m_rw:'Customer receives a structured form reply listing exactly which fields are missing.',
+m_st:'Pipeline halts with status rewrite_required until the customer resubmits.',
+m_bd:'Strict boundary: Mail Guard checks completeness only — no coverage or fraud judgment at the front door.',
+m_au:'Traceability record with reason, confidence and the missing-fields list.',
+m_sf:'Safety posture: reject spam and vague messages, accept every complete legitimate claim.',
+/* — Intake — */
+i_em:'Free-form claim email text, capped at 6000 characters in the prompt.',
+i_up:'Uploaded documents as bytes + mime type: images, PDFs, plain text.',
+i_ds:'Optional pre-computed document summary from attachments.py used as extra context.',
+i_js:'Strict JSON schema with 30+ fields and no extra keys allowed — the intake contract.',
+i_m:'Splits by modality: images go to vision models, PDFs and text go to text models, scanned PDFs get rendered first.',
+i_pd:'One JSON summary per document: type, extracted fields, quality score and risk signals.',
+i_mg:'Merges per-document summaries, dedupes filenames and preserves risk signals and modalities.',
+i_ai:'Reasoning model extracts claim facts, flags conflicts between documents and hints at the next agent.',
+i_fb:'Deterministic extraction fallback: regex for policy, dates and amounts plus document alias matching.',
+i_en:'Enriches the contract — backfills fields, computes missing info and merges risk indicators.',
+i_rc:'Reconciles results: promotes documented amounts, checks document evidence and corrects status.',
+i_st:'Status gate classifying the claim as complete, needs_review or incomplete.',
+i_out:'The structured claim: claimant, policy, incident date, amount and claim type.',
+i_doc:'Per-document summary with quality scores and risk signals.',
+i_r:'Payload for the Router: intake status and any missing documents.',
+i_siu:'Risk indicators and document signals forwarded as evidence to the Fraud agent.',
+i_bd:'Boundary: intake extracts facts only — it never adjudicates the claim.',
+i_q:'Quality gate flagging missing documents and low-confidence extractions.',
+i_au:'Audit events agent_started and agent_completed with duration.',
+/* — Router — */
+r_s:'Read-only snapshot of the ClaimSession with all outputs and documents so far.',
+r_in:'Intake output: status plus the missing-information list.',
+r_env:'Environment flags like ROUTER_ALWAYS_LLM and model overrides.',
+r_pa:'Pause check: if intake is incomplete, no downstream agents run and the customer gets a document request.',
+r_fp:'Deterministic fast path — complete or needs_review claims select all four downstream agents without an LLM call.',
+r_ai:'LLM path used only for ambiguous claims, choosing agents from the session snapshot.',
+r_fb:'Fallback route from simple heuristics: policy presence, risk, amount, date — human review if too sparse.',
+r_dep:'Dependency enforcer: triage requires coverage + fraud, copilot requires triage. Order is guaranteed.',
+r_n:'Normalizes the route into next_agent, claim_status and confidence.',
+r_sel:'The chosen agent list: coverage, fraud, triage, copilot.',
+r_req:'Document request payload when customer input is still missing.',
+r_lo:'The orchestrator executes selected agents in order and records timings.',
+r_bd:'Boundary: the router selects agents only — it never adjudicates.',
+r_dt:'Cost control: the LLM is skipped on clear-cut claims and used only when routing is ambiguous.',
+r_au:'Audit event route_selected with reason and confidence.',
+/* — Orchestrator — */
+o_in:'Called from app/run.py or the CLI with claim_id and the email payload.',
+o_doc:'Document context: documents_summary plus the uploaded files.',
+o_cfg:'Runtime options such as send_emails and the email thread id.',
+o_s:'Frozen ClaimSession object accumulating guard result, route, outputs, timings and errors.',
+o_iv:'Non-fatal input validation — bad input triggers a rewrite request instead of a crash.',
+o_au:'Audit trail opens with pipeline_started and logs every stage event.',
+o_mg:'Stage 0: Mail Guard evaluates the email; the pipeline stops here on a rewrite decision.',
+o_it:'Stage 1: Intake extracts claim facts; the pipeline pauses on extraction errors.',
+o_rt:'Stage 2: Router picks selected_agents and enforces dependency order.',
+o_lp:'Stage loop running coverage → fraud → triage → copilot in order.',
+o_sm:'Stage emails sent as agents finish: coverage update, fraud alert, final route.',
+o_pdf:'PDF report generated conditionally — human approval, high risk or high value triggers it.',
+o_out:'Final pipeline summary: workflow_state, all outputs and any errors.',
+o_ha:'Human boundary: the pipeline never issues a final settlement.',
+o_tm:'Per-agent timing: started, completed and duration_ms for each stage.',
+o_af:'Audit closes with pipeline_completed and the report flag.',
+/* — Coverage — */
+c_in:'Intake facts feeding coverage: policy, claim type, date, amount and documents.',
+c_pol:'The customer policy number, or a reference profile id when absent.',
+c_cfg:'Catalog source switch: bigquery, local PDFs, or auto.',
+c_bq:'Policy lookup in BigQuery with a safe empty fallback when offline.',
+c_cat:'Policy catalog from the policy.documents table, with local PDF fallback.',
+c_ev:'Evidence builder matches claim type to policy sections and extracts clause snippets and search terms.',
+c_ref:'Reference sample policy used only when explicitly cited as such.',
+c_ai:'Coverage reasoner: policy-only logic over limits and exclusions, strict JSON output.',
+c_fb:'Deterministic coverage check: active dates, covered peril, waiting period.',
+c_ir:'Compliance guard: any determination must carry clause citations and mention the appeals process.',
+c_cal:'Calculation method: sum insured, deductible and applicable limits.',
+c_out:'Final coverage position: covered, not covered or needs_review, plus a manual review flag.',
+c_bd:'Boundary: coverage only — no fraud scoring or triage happens here.',
+c_dn:'Denial safeguard: a specific policy clause is required and prohibited bases are blocked.',
+c_au:'Audit: agent output stored with duration_ms.',
+/* — Fraud — */
+f_ev:'Intake evidence: claim facts, documents and risk indicators.',
+f_cov:'Coverage context: policy dates and limits for consistency checks.',
+f_id:'The claim id, excluded from its own duplicate lookup.',
+f_dup:'BigQuery duplicate search: same sender, type and date within a 90-day window.',
+f_sig:'Signal engine weighting identity, timeline, document and billing signals per claim type.',
+f_wl:'Provider watchlists and price benchmarks catch outlier billing.',
+f_sc:'Deterministic score capped at 100, mapped to a risk level and recommended action.',
+f_ai:'SIU explanation drafted by the LLM — it explains the evidence but never accuses.',
+f_fb:'Deterministic brief keeps the same score and action if OpenAI fails.',
+f_out:'Fraud output: score, level, signals and duplicate matches.',
+f_act:'Investigation action: continue, request docs, refer to SIU, or hold.',
+f_tri:'fraud_score and human approval reasons forwarded to Triage.',
+f_bd:'Boundary: this sets investigation priority, never a final fraud finding.',
+f_lk:'Immutable scoring guardrail: the LLM cannot change the score and signals are preserved.',
+f_au:'Audit: agent_completed with the fraud_score.',
+/* — Triage — */
+t_in:'Intake facts: claim type plus any clinical details.',
+t_cov:'Coverage status and the manual review flag.',
+t_fr:'Fraud score and its signals.',
+t_hr:'Collects human approval reasons: high fraud, coverage review, high value or claim type.',
+t_cl:'Clinical assessment scanning for emergency terms, vitals and specialist mapping.',
+t_nm:'Non-medical urgency: total loss, stranded or displaced customers, domain reviewer selection.',
+t_ai:'Triage synthesis in a UM reviewer role — urgency only, not coverage or fraud.',
+t_fb:'Safe hard-rule fallback with an SLA map and priority color.',
+t_ov:'Hard overrides: no downgrades ever — emergencies stay red and medical docs get requested.',
+t_out:'Routing output: route, priority and triage color.',
+t_sla:'SLA hours and the specialist reviewer type.',
+t_ok:'Human approval flag and its reason list.',
+t_bd:'Boundary: triage never decides coverage or fraud.',
+t_fl:'Clinical flags: mismatches, abnormal vitals, missing evidence.',
+t_au:'Audit: routing payload with duration_ms.',
+/* — Copilot — */
+p_in:'Intake facts and documents feeding the brief.',
+p_cov:'Coverage position with its citations.',
+p_fr:'Fraud signals and the recommended action.',
+p_tr:'Triage route, SLA and approval flags.',
+p_ai:'Brief synthesis as an employee copilot — strict JSON, only supplied agent outputs, no new judgments.',
+p_fb:'Fallback brief built from claim details, coverage, fraud and routing plus open questions.',
+p_ev:'Evidence log of each agent status and completion time.',
+p_en:'Enriches the brief with citations, plain-English summaries and role-specific assistance.',
+p_tl:'Claim chronology, missing items and concrete review actions.',
+p_lt:'Draft letters: document request, hospital clarification, internal note.',
+p_md:'Adjuster-facing markdown brief with the human boundary and a claim snapshot.',
+p_pdf:'Sections feeding the PDF report: evidence and citations.',
+p_to:'Recommended tools: RAG lookup, calculator, letters, timeline.',
+p_bd:'Decision boundary: the copilot never approves, denies or settles.',
+p_rl:'Role views tailored to claims, SIU, medical and audit staff.',
+p_au:'Audit: agent_completed with the triage color.'
+};
+
+/* ================= LAYOUT & RENDER ================= */
+const W=1560;
+function layoutView(v){
+  const labelW=200, mx=22, cx0=mx+labelW+18, cw=W-cx0-mx;
+  let y=76; const pos={}, bands=[];
+  v.rows.forEach((r,ri)=>{
+    const lines=r.nodes2?[r.nodes,r.nodes2]:[r.nodes];
+    const bh=lines.length===2?232:128;
+    lines.forEach((ln,li)=>{
+      const gap=24, n=ln.length;
+      const nw=Math.min(298,(cw-(n-1)*gap)/n);
+      const tw=n*nw+(n-1)*gap, sx=cx0+(cw-tw)/2;
+      const ny=y+(lines.length===2?(li===0?18:122):20);
+      ln.forEach((nd,i)=>{
+        const x=sx+i*(nw+gap);
+        pos[nd[0]]={x,y:ny,w:nw,h:88,cx:x+nw/2,cy:ny+44,node:nd,band:ri};
+      });
+    });
+    bands.push({y,h:bh,r,ri}); y+=bh+16;
+  });
+  return {pos,bands,H:y+8};
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function edgeGeom(a,b){
+  if(Math.abs(a.cy-b.cy)<12){
+    const l=a.cx<b.cx?a:b, r=a.cx<b.cx?b:a;
+    const x1=a.cx<b.cx?a.x+a.w:a.x, x2=a.cx<b.cx?b.x-7:b.x+b.w+7;
+    return {d:`M ${x1} ${a.cy} L ${x2} ${b.cy}`, mid:[(x1+x2)/2,a.cy-8], end:[x2,b.cy]};
+  }
+  const down=b.cy>a.cy;
+  const sy=down?a.y+a.h:a.y, ty=down?b.y-7:b.y+b.h+7;
+  const my=(sy+ty)/2;
+  return {d:`M ${a.cx} ${sy} C ${a.cx} ${my}, ${b.cx} ${my}, ${b.cx} ${ty}`,
+    mid:[(a.cx+b.cx)/2,my-6], end:[b.cx,ty]};
+}
+
+function edgeAnim(id,type,geom){
+  const c=TOK[type].c;
+  if(type==='green') return `
+    <circle r="3.2" fill="${c}" filter="url(#softglow)"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>
+    <circle r="2.2" fill="#86efac"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>
+    <circle r="2.2" fill="#86efac" opacity=".7"><animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>`;
+  if(type==='blue') return `
+    <circle r="4" fill="${c}" filter="url(#glow)"><animateMotion dur="3.4s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;0.5;1" calcMode="linear"><mpath href="#${id}"/></animateMotion>
+    <animate attributeName="r" values="4;2.6;4" dur="3.4s" repeatCount="indefinite"/></circle>`;
+  if(type==='amber') return `
+    <rect width="7" height="7" rx="1.8" x="-3.5" y="-3.5" fill="${c}" filter="url(#softglow)"><animateMotion dur="5s" repeatCount="indefinite" rotate="auto"><mpath href="#${id}"/></animateMotion>
+    <animate attributeName="opacity" values="1;.35;1" dur="1.6s" repeatCount="indefinite"/></rect>`;
+  if(type==='teal') return `
+    <circle r="2.8" fill="${c}"><animateMotion dur="2.1s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>
+    <circle cx="${geom.end[0]}" cy="${geom.end[1]}" r="3" fill="none" stroke="${c}" stroke-width="1.6">
+      <animate attributeName="r" values="2;13" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".9;0" dur="1.6s" repeatCount="indefinite"/></circle>
+    <circle cx="${geom.end[0]}" cy="${geom.end[1]}" r="3" fill="none" stroke="${c}" stroke-width="1.2">
+      <animate attributeName="r" values="2;13" dur="1.6s" begin=".8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".7;0" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>`;
+  if(type==='pink') return `
+    <g transform="translate(${geom.mid[0]},${geom.mid[1]+6})">
+      <rect x="-5" y="-5" width="10" height="10" rx="2" fill="none" stroke="${c}" stroke-width="1.6" transform="rotate(45)" filter="url(#softglow)">
+        <animate attributeName="opacity" values=".9;.15;.9" dur="1.4s" repeatCount="indefinite"/></rect>
+      <circle r="1.8" fill="${c}"><animate attributeName="opacity" values="1;.2;1" dur="1.4s" repeatCount="indefinite"/></circle>
+    </g>`;
+  return '';
+}
+
+let edgeSeq=0;
+function renderView(vid){
+  const v=VIEWS.find(x=>x.id===vid); if(!v)return;
+  current=vid;
+  const L=layoutView(v);
+  let defs=`<defs>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="softglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  for(const k in TOK) defs+=`<marker id="mk_${k}" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="${TOK[k].c}"/></marker>`;
+  defs+='</defs>';
+
+  let bandsSvg='';
+  L.bands.forEach(b=>{
+    const bc=BANDC[b.r.color];
+    bandsSvg+=`<g class="band" style="animation-delay:${b.ri*70}ms">
+      <rect class="bandbox" x="22" y="${b.y}" width="${W-44}" height="${b.h}" rx="15" fill="${bc}0d" stroke="${bc}55" stroke-width="1.4"/>
+      <rect x="40" y="${b.y+b.h/2-21}" width="42" height="42" rx="11" fill="none" stroke="${bc}" stroke-width="2"/>
+      <text x="61" y="${b.y+b.h/2+7}" fill="${bc}" font-size="21" font-weight="800" text-anchor="middle">${b.r.n}</text>
+      <text x="96" y="${b.y+b.h/2-(b.r.desc?8:-1)}" fill="${bc}" font-size="14.5" font-weight="800">${esc(b.r.label)}</text>
+      ${b.r.desc?`<text x="96" y="${b.y+b.h/2+10}" fill="#6a6288" font-size="9.5">${esc(b.r.desc)}</text>`:''}
+    </g>`;
+  });
+
+  let edgesSvg='', animSvg='';
+  (v.edges||[]).forEach(e=>{
+    const a=L.pos[e[0]], b=L.pos[e[1]]; if(!a||!b)return;
+    const t=e[2], g=edgeGeom(a,b), id='ep'+(++edgeSeq);
+    edgesSvg+=`<path id="${id}" d="${g.d}" fill="none" stroke="${TOK[t].c}" stroke-width="1.9" opacity=".85" class="e-${t}" marker-end="url(#mk_${t})"/>`;
+    if(e[3]) edgesSvg+=`<text class="elabel" x="${g.mid[0]}" y="${g.mid[1]}" fill="${TOK[t].c}" text-anchor="middle" opacity=".95">${esc(e[3])}</text>`;
+    animSvg+=edgeAnim(id,t,g);
+  });
+
+  let nodesSvg='';
+  for(const k in L.pos){
+    const p=L.pos[k], nd=p.node, band=v.rows[p.band], bc=BANDC[band.color];
+    const link=nd[4], subs=nd[3]||[];
+    let sub=''; subs.forEach((s,i)=>{sub+=`<text x="${p.x+52}" y="${p.y+46+i*13.5}" fill="#9f98b8" font-size="10">${esc(s)}</text>`});
+    nodesSvg+=`<g class="node${link?' linked':''}" id="nd_${k}" data-link="${link||''}" data-title="${esc(nd[2])}" data-sub="${esc(subs.join(' · '))}">
+      ${link?`<rect class="linkring" x="${p.x-4}" y="${p.y-4}" width="${p.w+8}" height="${p.h+8}" rx="15" fill="none" stroke="${bc}" stroke-width="1.2" opacity=".35" stroke-dasharray="4 5"/>`:''}
+      <rect class="simring" x="${p.x-5}" y="${p.y-5}" width="${p.w+10}" height="${p.h+10}" rx="16" fill="none" stroke="#fff" stroke-width="2"/>
+      <rect class="nbox" x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="12" fill="#120e24" stroke="#3a2d63" stroke-width="1.3"/>
+      <rect x="${p.x+12}" y="${p.y+12}" width="30" height="30" rx="8" fill="${bc}18" stroke="${bc}" stroke-width="1.4"/>
+      <text x="${p.x+27}" y="${p.y+31}" fill="${bc}" font-size="${nd[1].length>2?9:11}" font-weight="800" text-anchor="middle">${esc(nd[1])}</text>
+      <text x="${p.x+52}" y="${p.y+29}" fill="#e8eef8" font-size="12.5" font-weight="700">${esc(nd[2])}</text>
+      ${sub}
+      ${link?`<text class="zoomhint" x="${p.x+p.w-16}" y="${p.y+20}" fill="${bc}" font-size="12" text-anchor="middle">⤢</text>`:''}
+    </g>`;
+  }
+
+  const svg=document.getElementById('canvas');
+  svg.setAttribute('viewBox',`0 0 ${W} ${L.H}`);
+  svg.innerHTML=defs
+    +`<text x="${W/2}" y="42" fill="#eef3fb" font-size="26" font-weight="800" text-anchor="middle" style="letter-spacing:.4px">${esc(v.title)}</text>`
+    +bandsSvg+edgesSvg+nodesSvg+`<g pointer-events="none">${animSvg}</g>`;
+
+  document.getElementById('viewtitle').textContent=v.nav;
+  document.getElementById('crumb').innerHTML=vid==='prototype'
+    ?'SYSTEM MAP · <b>Global Pipeline</b>'
+    :`SYSTEM MAP · Global Pipeline · <b>${esc(v.nav)}</b>`;
+  document.getElementById('backbtn').classList.toggle('show',vid!=='prototype');
+  document.querySelectorAll('.navitem').forEach(el=>el.classList.toggle('active',el.dataset.view===vid));
+
+  svg.querySelectorAll('.node').forEach(g=>{
+    g.addEventListener('mousemove',ev=>{
+      const tip=document.getElementById('tip');
+      const det=DETAILS[g.id.slice(3)];
+      const chips=g.dataset.sub?`<div class="tchips">${g.dataset.sub.split(' · ').filter(Boolean).map(s=>`<span>${s}</span>`).join('')}</div>`:'';
+      tip.innerHTML=`<b>${g.dataset.title}</b>`
+        +(det?`<span class="tdet">${det}</span>`:'')
+        +chips
+        +(g.dataset.link?'<span class="go">⤢ Click to zoom into sub-system</span>':'');
+      tip.style.opacity=1;
+      tip.style.left=Math.min(ev.clientX+16,innerWidth-340)+'px';
+      tip.style.top=Math.min(ev.clientY+14,innerHeight-tip.offsetHeight-18)+'px';
+    });
+    g.addEventListener('mouseleave',()=>document.getElementById('tip').style.opacity=0);
+    if(g.dataset.link) g.addEventListener('click',()=>{stopSim();navigate(g.dataset.link,g)});
+  });
+}
+
+/* ================= NAVIGATION ================= */
+let current=null, navLock=false;
+function navigate(vid,originEl){
+  if(current===vid||navLock)return; navLock=true;
+  const vp=document.getElementById('viewport');
+  if(originEl){
+    const bb=originEl.getBoundingClientRect(), vb=vp.getBoundingClientRect();
+    vp.style.transformOrigin=`${((bb.left+bb.right)/2-vb.left)/vb.width*100}% ${((bb.top+bb.bottom)/2-vb.top)/vb.height*100}%`;
+  } else vp.style.transformOrigin='50% 38%';
+  vp.classList.add('zoomOut');
+  setTimeout(()=>{
+    renderView(vid); vp.scrollTop=0;
+    vp.classList.remove('zoomOut'); vp.classList.add('zoomIn');
+    setTimeout(()=>{vp.classList.remove('zoomIn');navLock=false},560);
+  },390);
+}
+
+/* ================= SIDEBAR / LEGEND ================= */
+(function buildNav(){
+  const nav=document.getElementById('nav'); let lastGroup='';
+  VIEWS.forEach((v,i)=>{
+    if(v.group!==lastGroup){lastGroup=v.group;const h=document.createElement('div');h.className='navhead';h.textContent=v.group;nav.appendChild(h)}
+    const el=document.createElement('div'); el.className='navitem'; el.dataset.view=v.id;
+    el.innerHTML=`<span class="ic" style="color:${v.iconc};border-color:${v.iconc}66;background:${v.iconc}14">${v.icon}</span>
+      <span>${v.nav}</span><span style="margin-left:auto;color:#4a3d6b;font-size:9.5px">${i+1}</span>`;
+    el.addEventListener('click',()=>{stopSim();navigate(v.id)});
+    nav.appendChild(el);
+  });
+  const lr=document.getElementById('legendrows');
+  const samples={
+    green:'<line x1="2" y1="6" x2="40" y2="6" stroke="#22c55e" stroke-width="2"/><circle r="2.5" fill="#86efac"><animateMotion dur="1.6s" repeatCount="indefinite" path="M2,6 L40,6"/></circle>',
+    blue:'<line x1="2" y1="6" x2="40" y2="6" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5 5" class="e-blue"/><circle r="3" fill="#3b82f6"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.5;1" calcMode="linear" path="M2,6 L40,6"/></circle>',
+    amber:'<line x1="2" y1="6" x2="40" y2="6" stroke="#f59e0b" stroke-width="2" stroke-dasharray="7 6" class="e-amber"/><rect x="-3" y="-3" width="6" height="6" rx="1.5" fill="#f59e0b"><animateMotion dur="3.5s" repeatCount="indefinite" path="M2,6 L40,6"/></rect>',
+    teal:'<line x1="2" y1="6" x2="34" y2="6" stroke="#14b8a6" stroke-width="2" stroke-dasharray="5 5" class="e-teal"/><circle cx="37" cy="6" r="2" fill="none" stroke="#14b8a6" stroke-width="1.4"><animate attributeName="r" values="2;7" dur="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur="1.4s" repeatCount="indefinite"/></circle>',
+    pink:'<line x1="2" y1="6" x2="40" y2="6" stroke="#ec4899" stroke-width="2" stroke-dasharray="4 5" class="e-pink"/><rect x="17" y="2" width="8" height="8" rx="1.5" fill="none" stroke="#ec4899" stroke-width="1.4" transform="rotate(45 21 6)"><animate attributeName="opacity" values="1;.15;1" dur="1.3s" repeatCount="indefinite"/></rect>'
+  };
+  for(const k in TOK){
+    const d=document.createElement('div'); d.className='lrow';
+    d.innerHTML=`<svg width="44" height="12" viewBox="0 0 44 12">${samples[k]}</svg><span>${TOK[k].label}</span>`;
+    lr.appendChild(d);
+  }
+})();
+document.getElementById('backbtn').addEventListener('click',()=>{stopSim();navigate('prototype')});
+addEventListener('keydown',e=>{
+  const n=parseInt(e.key); if(n>=1&&n<=VIEWS.length){stopSim();navigate(VIEWS[n-1].id)}
+  if(e.key==='Escape'){stopSim();navigate('prototype')}
+});
+
+/* ================= SIMULATOR ================= */
+const SIM=[
+ {view:'mailguard',phase:'Phase 1 · Front Door — Mail Guard',pct:12,
+  desc:'Incoming claim email arrives. Guardrail inspects completeness — spam and vague inquiries are rejected at the door.',
+  steps:[
+   ['m_txt','green','Claim email received — free-form customer text'],
+   ['m_p','green','Guard prompt assembled · 4 required fields checked'],
+   ['m_ai','blue','OpenAI structured decision (generate.json, fixed schema)'],
+   ['m_n','green','Result normalized · empty-text guard passed'],
+   ['m_d','pink','GUARDRAIL ✓ decision = PROCEED'],
+   ['m_go','green','Handed to Pipeline Orchestrator']]},
+ {view:'orchestrator',phase:'Phase 2a · Orchestrator Loop',pct:26,
+  desc:'ClaimSession snapshot persisted; the orchestrator loops through timed agent stages with full audit.',
+  steps:[
+   ['o_s','amber','ClaimSession frozen-state snapshot persisted'],
+   ['o_iv','green','InputValidator · non-fatal validation passed'],
+   ['o_au','amber','Audit sync → pipeline_started + stage events stored'],
+   ['o_it','green','Intake stage dispatched']]},
+ {view:'intake',phase:'Phase 2b · Intake Agent 01',pct:40,
+  desc:'Multimodal extraction into a strict 30+ field contract, with evidence synced to storage.',
+  steps:[
+   ['i_em','green','Claim email + uploads ingested'],
+   ['i_m','green','Modality split · image→vision, PDF→text'],
+   ['i_pd','blue','Per-document JSON extraction (model call)'],
+   ['i_mg','amber','Summaries merged · evidence synced to store'],
+   ['i_ai','blue','Reasoning extract · claim facts + conflicts'],
+   ['i_st','green','Status gate → COMPLETE'],
+   ['i_r','teal','Router input emitted']]},
+ {view:'router',phase:'Phase 2c · Router Agent 02',pct:52,
+  desc:'Deterministic fast path selects the downstream agents; dependencies are enforced.',
+  steps:[
+   ['r_in','green','Intake output received · status complete'],
+   ['r_pa','green','Pause check passed — no missing docs'],
+   ['r_fp','green','Deterministic fast path · LLM call skipped (cost control)'],
+   ['r_dep','pink','GUARDRAIL ✓ dependency enforcer · triage needs coverage+fraud'],
+   ['r_sel','teal','selected_agents → coverage, fraud, triage, copilot']]},
+ {view:'fraud',phase:'Phase 3a · Fraud Agent 04',pct:66,
+  desc:'Deterministic scoring with immutable guardrail — the LLM explains but can never change the score.',
+  steps:[
+   ['f_ev','green','Intake evidence + risk indicators loaded'],
+   ['f_dup','amber','BigQuery duplicate lookup · 90-day window'],
+   ['f_sig','green','Signal engine · identity / timeline / billing weighted'],
+   ['f_sc','green','Deterministic score = 34 / 100 · risk LOW-MED'],
+   ['f_ai','blue','SIU explanation drafted (no accusation)'],
+   ['f_lk','pink','GUARDRAIL ✓ score immutable — LLM cannot change it'],
+   ['f_tri','teal','fraud_score forwarded to Triage']]},
+ {view:'coverage',phase:'Phase 3b · Coverage Agent 03',pct:80,
+  desc:'Policy-only reasoning over BigQuery evidence, with a compliance guard demanding citations.',
+  steps:[
+   ['c_in','green','Intake facts · policy, type, date, amount'],
+   ['c_bq','amber','BigQuery policy lookup · evidence stored'],
+   ['c_ev','green','Evidence builder · clause snippets matched'],
+   ['c_ai','blue','Coverage Reasoner · limits + exclusions (strict JSON)'],
+   ['c_ir','pink','GUARDRAIL ✓ compliance guard · citation present'],
+   ['c_out','teal','Coverage output → COVERED · no manual review']]},
+ {view:'triage',phase:'Phase 4a · Triage Agent 05',pct:92,
+  desc:'Urgency synthesis with hard overrides — emergencies never get downgraded.',
+  steps:[
+   ['t_in','green','Claim facts + coverage + fraud score in'],
+   ['t_cl','green','Clinical assessment · no emergency terms'],
+   ['t_ai','blue','Triage synthesis · UM reviewer role'],
+   ['t_ov','pink','GUARDRAIL ✓ hard overrides applied · no downgrades'],
+   ['t_out','green','Route → standard queue · triage GREEN'],
+   ['t_sla','teal','SLA 24h · specialist reviewer assigned']]},
+ {view:'copilot',phase:'Phase 4b · Copilot Dashboard 06',pct:100,
+  desc:'Final brief lands on the adjuster desk. Copilot recommends — humans decide.',
+  steps:[
+   ['p_ai','blue','Brief synthesis from all agent outputs'],
+   ['p_en','green','Enriched · citations + plain English'],
+   ['p_tl','green','Timeline + next steps compiled'],
+   ['p_md','teal','Adjuster markdown delivered ✓'],
+   ['p_pdf','teal','PDF report sections emitted ✓'],
+   ['p_bd','pink','GUARDRAIL ✓ decision boundary · copilot never decides']]}
+];
+let simRun=null;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function logLine(color,txt){
+  const log=document.getElementById('hudlog');
+  const d=document.createElement('div'); d.className='logline';
+  d.innerHTML=`<span class="ldot" style="background:${color};color:${color}"></span><span class="lt">${txt}</span><span class="lts">${new Date().toLocaleTimeString([],{hour12:false})}</span>`;
+  log.appendChild(d); log.scrollTop=log.scrollHeight;
+}
+function toast(msg,color){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.borderColor=color+'88'; t.style.color=color;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600);
+}
+function clearSimMarks(){document.querySelectorAll('.node.sim-on').forEach(n=>{n.classList.remove('sim-on');const r=n.querySelector('.simring');if(r)r.style.stroke='#fff';const b=n.querySelector('.nbox');if(b)b.style.stroke=''})}
+function stopSim(){
+  if(!simRun)return;
+  simRun.cancel=true; simRun=null;
+  clearSimMarks();
+  document.getElementById('hud').classList.remove('show');
+  document.getElementById('simbtn').classList.remove('running');
+  document.getElementById('simbtn').innerHTML='▶&nbsp; Simulate Live Claim';
+  document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('simhot'));
+}
+async function runSim(){
+  if(simRun){stopSim();return}
+  const run={cancel:false}; simRun=run;
+  const btn=document.getElementById('simbtn');
+  btn.classList.add('running'); btn.innerHTML='■&nbsp; Stop Simulation';
+  document.getElementById('hudlog').innerHTML='';
+  document.getElementById('hud').classList.add('show');
+  document.getElementById('hudfill').style.width='0%';
+  logLine('#22c55e','▶ Live claim CLM-2093 injected into pipeline…');
+  for(const ph of SIM){
+    if(run.cancel)return;
+    document.getElementById('hudphasetxt').textContent=ph.phase;
+    document.getElementById('huddesc').textContent=ph.desc;
+    document.querySelectorAll('.navitem').forEach(n=>n.classList.toggle('simhot',n.dataset.view===ph.view));
+    if(current!==ph.view){navigate(ph.view);await sleep(1050)}
+    if(run.cancel)return;
+    for(const [nid,tok,msg] of ph.steps){
+      if(run.cancel)return;
+      const g=document.getElementById('nd_'+nid);
+      if(g){
+        g.classList.add('sim-on');
+        const c=TOK[tok].c;
+        g.querySelector('.simring').style.stroke=c;
+        g.querySelector('.nbox').style.stroke=c;
+        g.scrollIntoView({block:'nearest',behavior:'smooth'});
+      }
+      logLine(TOK[tok].c,msg);
+      await sleep(820);
+    }
+    document.getElementById('hudfill').style.width=ph.pct+'%';
+    await sleep(650);
+    clearSimMarks();
+  }
+  if(run.cancel)return;
+  logLine('#5eead4','✓ Pipeline complete — adjuster brief ready. Humans decide.');
+  toast('✓ Claim CLM-2093 processed end-to-end — awaiting human approval','#5eead4');
+  document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('simhot'));
+  document.getElementById('simbtn').classList.remove('running');
+  document.getElementById('simbtn').innerHTML='▶&nbsp; Simulate Live Claim';
+  simRun=null;
+  setTimeout(()=>{if(!simRun)document.getElementById('hud').classList.remove('show')},5200);
+}
+document.getElementById('simbtn').addEventListener('click',runSim);
+
+/* boot */
+renderView('prototype');
+setTimeout(()=>toast('Tip: hover any box for details · click glowing nodes to zoom into their sub-system','#c084fc'),1200);
+</script>
+</body>
+</html>

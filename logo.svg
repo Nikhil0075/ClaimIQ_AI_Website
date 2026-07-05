@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 290" fill="none">
+  <!-- C letterform: center (100, 88), radius 64, gap ±45° on right side -->
+  <path d="M 145.3 43.7 A 64 64 0 1 0 145.3 132.3"
+        stroke="#a855f7" stroke-width="30" stroke-linecap="round" fill="none"/>
+  <!-- CLAIMIQ wordmark -->
+  <text x="100" y="205"
+        font-family="Inter, 'Helvetica Neue', Arial, sans-serif"
+        font-size="27" font-weight="900" letter-spacing="1"
+        fill="#a855f7" text-anchor="middle">CLAIMIQ</text>
+  <!-- AI subtext -->
+  <text x="103" y="242"
+        font-family="Inter, 'Helvetica Neue', Arial, sans-serif"
+        font-size="17" font-weight="500" letter-spacing="9"
+        fill="#a855f7" text-anchor="middle">AI</text>
+</svg>

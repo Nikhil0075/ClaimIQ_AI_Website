@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="ClaimIQ-Architecture" id="claimiq-arch-openai">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1120" math="0" shadow="0" background="#F4FAFD">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Canvas frame -->
+        <mxCell id="bg" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=none;">
+          <mxGeometry x="16" y="16" width="1592" height="1076" as="geometry" />
+        </mxCell>
+        <mxCell id="frame" parent="1" vertex="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0F8FC;strokeColor=#64748B;dashed=1;dashPattern=8 8;strokeWidth=2;arcSize=1;">
+          <mxGeometry x="28" y="64" width="1568" height="1012" as="geometry" />
+        </mxCell>
+        <mxCell id="titletxt" parent="1" vertex="1" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Consolas;fontSize=22;fontStyle=1;fontColor=#08735A;" value="ClaimIQ — Production Architecture · OpenAI Agentic Pipeline">
+          <mxGeometry x="40" y="24" width="900" height="34" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== GROUP BANDS ===================== -->
+        <mxCell id="G1" parent="1" vertex="1" value="SOURCES &amp; CHANNELS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#EAF6FB,#10202f);strokeColor=#9673A6;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="78" width="1520" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="G2" parent="1" vertex="1" value="INGESTION &amp; GUARDRAILS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#EAF6FB,#10202f);strokeColor=#6C8EBF;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="214" width="1520" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="G3" parent="1" vertex="1" value="AGENT ORCHESTRATION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#EAF7EE,#10201a);strokeColor=#82B366;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="350" width="1520" height="222" as="geometry" />
+        </mxCell>
+        <mxCell id="G4" parent="1" vertex="1" value="OPENAI INTELLIGENCE LAYER" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#E7F8F2,#0e201b);strokeColor=#10A37F;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="588" width="1520" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="G5" parent="1" vertex="1" value="GOOGLE CLOUD DATA PLANE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#FBF3E2,#20180a);strokeColor=#D79B00;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="696" width="1520" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="G6" parent="1" vertex="1" value="NOTIFICATIONS &amp; HUMAN-IN-THE-LOOP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#EAF7EE,#10201a);strokeColor=#82B366;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="832" width="1520" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="G7" parent="1" vertex="1" value="SECURITY &amp; OBSERVABILITY" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#EEF2F6,#161c24);strokeColor=#64748B;strokeWidth=3;verticalAlign=top;align=left;spacingLeft=16;spacingTop=8;fontColor=#2AA198;fontFamily=Consolas;fontSize=15;fontStyle=1;arcSize=3;">
+          <mxGeometry x="40" y="968" width="1520" height="98" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 1 · SOURCES ===================== -->
+        <mxCell id="n_claimant" parent="1" vertex="1" value="&lt;b&gt;👤 Claimant&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;email + attachments&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="72" y="110" width="220" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="n_gmail" parent="1" vertex="1" value="&lt;b&gt;📧 Gmail Mailbox&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;IMAP · unread poll&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="330" y="110" width="240" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="n_adjuster" parent="1" vertex="1" value="&lt;b&gt;🧑‍💼 Adjuster / SIU&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;reviews · approves&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="1310" y="110" width="230" height="64" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 2 · INGESTION ===================== -->
+        <mxCell id="n_run" parent="1" vertex="1" value="&lt;b&gt;▶ app/run.py&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;poll · watch · demo&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="72" y="246" width="220" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="n_emailio" parent="1" vertex="1" value="&lt;b&gt;📥 email_io.py&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;IMAP read · SMTP send&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="332" y="246" width="230" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="n_attach" parent="1" vertex="1" value="&lt;b&gt;🧾 attachments.py&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;extract · classify (vision + text)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="602" y="246" width="270" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="n_valid" parent="1" vertex="1" value="&lt;b&gt;🛡️ InputValidator&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;size · format · injection scan&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B85450;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="912" y="246" width="250" height="64" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 3 · ORCHESTRATION row 1 ===================== -->
+        <mxCell id="n_orch" parent="1" vertex="1" value="&lt;b&gt;⚙ Pipeline Orchestrator&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;session-based · dependency order&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673A6;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="72" y="382" width="280" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="n_session" parent="1" vertex="1" value="&lt;b&gt;🧩 ClaimSession&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;immutable · versioned&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673A6;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="384" y="382" width="220" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="n_guard" parent="1" vertex="1" value="&lt;b&gt;🚦 Mail Guard&lt;/b&gt; &lt;font color='#9673A6'&gt;00&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;4 required fields · rewrite&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673A6;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="636" y="382" width="210" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="n_router" parent="1" vertex="1" value="&lt;b&gt;🔀 Router&lt;/b&gt; &lt;font color='#9673A6'&gt;02&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;fast-path + LLM select&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673A6;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="878" y="382" width="200" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="n_shared" parent="1" vertex="1" value="&lt;b&gt;🔧 Shared Runtime&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;config · audit · validation&lt;br&gt;openai_client · google_clients&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;strokeWidth=2;shadow=0;dashed=1;fontFamily=Consolas;fontSize=11;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="1110" y="378" width="350" height="62" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 3 · AGENTS row 2 ===================== -->
+        <mxCell id="n_intake" parent="1" vertex="1" value="&lt;b&gt;① Intake&lt;/b&gt; &lt;font color='#9673A6'&gt;01&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;30+ fields · classify&lt;br&gt;+ deterministic fallback&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673A6;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="72" y="474" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n_cover" parent="1" vertex="1" value="&lt;b&gt;② Coverage&lt;/b&gt; &lt;font color='#9673A6'&gt;03&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;policy cite · compliance&lt;br&gt;+ deterministic fallback&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673A6;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="360" y="474" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n_fraud" parent="1" vertex="1" value="&lt;b&gt;③ Fraud&lt;/b&gt; &lt;font color='#D79B00'&gt;04&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;13 SIU signals · score&lt;br&gt;immutable before LLM&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D79B00;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="648" y="474" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n_triage" parent="1" vertex="1" value="&lt;b&gt;④ Triage&lt;/b&gt; &lt;font color='#B85450'&gt;05&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;colour · SLA · routing&lt;br&gt;hard emergency override&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B85450;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="936" y="474" width="270" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n_copilot" parent="1" vertex="1" value="&lt;b&gt;⑤ Copilot&lt;/b&gt; &lt;font color='#82B366'&gt;06&lt;/font&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;multi-role brief · letters&lt;br&gt;assists, never decides&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="1224" y="474" width="270" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 4 · OPENAI ===================== -->
+        <mxCell id="n_openai" parent="1" vertex="1" value="&lt;b&gt;🧠 OpenAI Responses API&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;structured JSON · deterministic fallback&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#10A37F;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="72" y="612" width="360" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="n_m1" parent="1" vertex="1" value="gpt-4o-mini · text · vision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F8F2;strokeColor=#10A37F;strokeWidth=2;fontFamily=Consolas;fontSize=11;fontColor=#08735A;fontStyle=1;arcSize=20;">
+          <mxGeometry x="470" y="620" width="300" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="n_m2" parent="1" vertex="1" value="o4-mini · agent reasoning" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F8F2;strokeColor=#10A37F;strokeWidth=2;fontFamily=Consolas;fontSize=11;fontColor=#08735A;fontStyle=1;arcSize=20;">
+          <mxGeometry x="800" y="620" width="240" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="n_m3" parent="1" vertex="1" value="gpt-5.5 · router · orchestrator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E7F8F2;strokeColor=#10A37F;strokeWidth=2;fontFamily=Consolas;fontSize=11;fontColor=#08735A;fontStyle=1;arcSize=20;">
+          <mxGeometry x="1070" y="620" width="320" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 5 · GOOGLE CLOUD ===================== -->
+        <mxCell id="n_bq" parent="1" vertex="1" value="&lt;b&gt;🗄 Google BigQuery&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;claims_master · agent_outputs&lt;br&gt;audit_trail · policies&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D79B00;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="72" y="726" width="330" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="n_drive" parent="1" vertex="1" value="&lt;b&gt;📁 Google Drive&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;per-claim folder (OAuth)&lt;br&gt;attachments + adjuster PDF&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D79B00;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="432" y="726" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="n_forms" parent="1" vertex="1" value="&lt;b&gt;📝 Google Forms&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;pre-filled claim ID&lt;br&gt;decision → BigQuery&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D79B00;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="732" y="726" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="n_looker" parent="1" vertex="1" value="&lt;b&gt;📊 Looker Studio&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;queue · risk · SLA&lt;br&gt;reads BigQuery views&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D79B00;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="1032" y="726" width="320" height="72" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 6 · NOTIFICATIONS ===================== -->
+        <mxCell id="n_smtp" parent="1" vertex="1" value="&lt;b&gt;✉ SMTP Email Updates&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;ack · coverage · fraud alert&lt;br&gt;routing · assessment + PDF&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="72" y="862" width="330" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="n_approval" parent="1" vertex="1" value="&lt;b&gt;✅ Approval Gate&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;mandatory for high-risk&lt;br&gt;&amp; high-value claims&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B85450;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="432" y="862" width="280" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="n_stream" parent="1" vertex="1" value="&lt;b&gt;🖥 Streamlit Console&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;explainability JSON&lt;br&gt;live logs · agent timings&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="742" y="862" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="n_site" parent="1" vertex="1" value="&lt;b&gt;🌐 Reviewer Website&lt;/b&gt;&lt;br&gt;&lt;font style='font-size:10px;color:#5F7F8A'&gt;this static site&lt;br&gt;playground &amp; docs&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82B366;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=10;">
+          <mxGeometry x="1042" y="862" width="310" height="72" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== BAND 7 · SECURITY ===================== -->
+        <mxCell id="n_audit" parent="1" vertex="1" value="&lt;b&gt;📜 Audit Trail&lt;/b&gt; &lt;font style='font-size:10px;color:#5F7F8A'&gt;· logs every agent decision&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="72" y="998" width="330" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n_iam" parent="1" vertex="1" value="&lt;b&gt;🔐 IAM · Secrets · .env&lt;/b&gt; &lt;font style='font-size:10px;color:#5F7F8A'&gt;· credential isolation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="432" y="998" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n_clog" parent="1" vertex="1" value="&lt;b&gt;📈 Cloud Logging&lt;/b&gt; &lt;font style='font-size:10px;color:#5F7F8A'&gt;· durations · statuses&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="742" y="998" width="270" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n_authority" parent="1" vertex="1" value="&lt;b&gt;⚖ Human authority&lt;/b&gt; &lt;font style='font-size:10px;color:#5F7F8A'&gt;· AI assists, never decides&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#B85450;strokeWidth=2;shadow=1;fontFamily=Consolas;fontSize=12;fontColor=#0B3A44;arcSize=12;">
+          <mxGeometry x="1042" y="998" width="310" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== EDGES ===================== -->
+        <mxCell id="e1" parent="1" edge="1" source="n_claimant" target="n_gmail" value="submit claim" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" parent="1" edge="1" source="n_gmail" target="n_run" value="unread poll" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" parent="1" edge="1" source="n_run" target="n_attach" value="extract" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" parent="1" edge="1" source="n_run" target="n_orch" value="start pipeline" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" parent="1" edge="1" source="n_orch" target="n_guard" value="validate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" parent="1" edge="1" source="n_guard" target="n_router" value="route" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" parent="1" edge="1" source="n_router" target="n_intake" value="select agents" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8a" parent="1" edge="1" source="n_intake" target="n_cover" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8b" parent="1" edge="1" source="n_cover" target="n_fraud" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8c" parent="1" edge="1" source="n_fraud" target="n_triage" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8d" parent="1" edge="1" source="n_triage" target="n_copilot" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ai1" parent="1" edge="1" source="n_fraud" target="n_openai" value="inference" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0288D1;strokeWidth=2;dashed=1;fontFamily=Consolas;fontColor=#0288D1;fontSize=10;endArrow=block;startArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ai2" parent="1" edge="1" source="n_router" target="n_m3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0288D1;strokeWidth=2;dashed=1;endArrow=block;startArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_bq" parent="1" edge="1" source="n_copilot" target="n_bq" value="write claim + audit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_drive" parent="1" edge="1" source="n_attach" target="n_drive" value="evidence + PDF" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_look" parent="1" edge="1" source="n_bq" target="n_looker" value="reads views" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_smtp" parent="1" edge="1" source="n_copilot" target="n_smtp" value="brief + report" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_reply" parent="1" edge="1" source="n_smtp" target="n_claimant" value="assessment email" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_forms" parent="1" edge="1" source="n_copilot" target="n_forms" value="adjuster guide" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_verdict" parent="1" edge="1" source="n_forms" target="n_adjuster" value="human verdict" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#02C39A;strokeWidth=2;fontFamily=Consolas;fontColor=#0B7A5E;fontSize=10;endArrow=block;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_gate" parent="1" edge="1" source="n_approval" target="n_forms" value="gate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#B85450;strokeWidth=2;fontFamily=Consolas;fontColor=#B85450;fontSize=10;endArrow=block;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_audit" parent="1" edge="1" source="n_orch" target="n_audit" value="logs every decision" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#64748B;strokeWidth=2;fontFamily=Consolas;fontColor=#64748B;fontSize=10;endArrow=block;dashed=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
