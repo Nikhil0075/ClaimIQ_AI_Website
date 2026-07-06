@@ -522,6 +522,54 @@ setScenario("motor");
   }
 })();
 
+/* Custom cursor: desktop-only progressive enhancement */
+(function initClaimIQCursor() {
+  const supportsFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!supportsFinePointer || prefersReducedMotion) return;
+
+  const cursor = document.createElement("div");
+  const dot = document.createElement("div");
+  const interactiveSelector = [
+    "a",
+    "button",
+    "summary",
+    "[role='button']",
+    "[tabindex]:not([tabindex='-1'])",
+    ".scen-chip",
+    ".bundle-btn",
+    ".doc-tab",
+    ".copy-btn",
+    ".path-btn"
+  ].join(",");
+  const textSelector = "input, textarea, select, [contenteditable='true']";
+
+  cursor.className = "claimiq-cursor";
+  dot.className = "claimiq-cursor-dot";
+  cursor.setAttribute("aria-hidden", "true");
+  dot.setAttribute("aria-hidden", "true");
+  document.body.append(cursor, dot);
+  document.body.classList.add("claimiq-cursor-enabled");
+
+  window.addEventListener("pointermove", (event) => {
+    document.documentElement.style.setProperty("--cursor-x", event.clientX + "px");
+    document.documentElement.style.setProperty("--cursor-y", event.clientY + "px");
+    document.body.classList.add("claimiq-cursor-visible");
+
+    const target = event.target;
+    const isTextTarget = Boolean(target.closest && target.closest(textSelector));
+    const isInteractive = Boolean(target.closest && target.closest(interactiveSelector));
+    document.body.classList.toggle("claimiq-cursor-text", isTextTarget);
+    document.body.classList.toggle("claimiq-cursor-hover", isInteractive && !isTextTarget);
+  }, { passive: true });
+
+  window.addEventListener("pointerleave", () => {
+    document.body.classList.remove("claimiq-cursor-visible", "claimiq-cursor-hover", "claimiq-cursor-text");
+  });
+  window.addEventListener("pointerdown", () => document.body.classList.add("claimiq-cursor-pressed"));
+  window.addEventListener("pointerup", () => document.body.classList.remove("claimiq-cursor-pressed"));
+})();
+
 /* ══════════════ Interactive documentation center ══════════════ */
 
 /* helper: programmatically switch doc tab */

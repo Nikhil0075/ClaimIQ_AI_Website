@@ -152,6 +152,26 @@ body{background:var(--bg);color:var(--txt);font-family:Inter,"Segoe UI",system-u
   background:rgba(161,66,244,.12);border:1px solid rgba(161,66,244,.3);color:#c8b8ea}
 #tip .go{color:#c084fc;font-weight:700;margin-top:6px;display:block}
 
+@media (hover:hover) and (pointer:fine){
+body.claimiq-cursor-enabled,
+body.claimiq-cursor-enabled a,
+body.claimiq-cursor-enabled button,
+body.claimiq-cursor-enabled .navitem,
+body.claimiq-cursor-enabled .node.linked{cursor:none}
+.claimiq-cursor,.claimiq-cursor-dot{position:fixed;left:0;top:0;z-index:9999;pointer-events:none;opacity:0;
+  transform:translate3d(var(--cursor-x,-120px),var(--cursor-y,-120px),0) translate(-50%,-50%);
+  transition:opacity .18s ease,width .18s ease,height .18s ease,border-color .18s ease,background .18s ease}
+.claimiq-cursor{width:20px;height:20px;border:1px solid rgba(216,180,254,.78);border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.28) 0 18%,transparent 20%),linear-gradient(135deg,rgba(216,180,254,.26),rgba(161,66,244,.12));
+  box-shadow:0 0 14px rgba(216,180,254,.34),0 0 24px rgba(161,66,244,.2);backdrop-filter:blur(3px);mix-blend-mode:screen}
+.claimiq-cursor::after{content:"";position:absolute;inset:5px;border:1px solid rgba(255,255,255,.35);border-radius:inherit}
+.claimiq-cursor-dot{width:4px;height:4px;border-radius:50%;background:#f5e8ff;box-shadow:0 0 10px rgba(216,180,254,.82)}
+body.claimiq-cursor-visible .claimiq-cursor,body.claimiq-cursor-visible .claimiq-cursor-dot{opacity:1}
+body.claimiq-cursor-hover .claimiq-cursor{width:32px;height:32px;border-color:rgba(233,213,255,.88);
+  background:radial-gradient(circle,rgba(255,255,255,.22) 0 20%,transparent 22%),linear-gradient(135deg,rgba(233,213,255,.34),rgba(161,66,244,.16))}
+body.claimiq-cursor-pressed .claimiq-cursor{width:16px;height:16px}
+}
+
 @media (max-width:860px){#sidebar{width:210px;min-width:210px}}
 </style>
 </head>
@@ -1114,8 +1134,34 @@ async function runSim(){
 }
 document.getElementById('simbtn').addEventListener('click',runSim);
 
+function initClaimIQCursor(){
+  const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!fine||reduced)return;
+  const cursor=document.createElement('div');
+  const dot=document.createElement('div');
+  const interactive='.navitem,#simbtn,#backbtn,#returnhome,.node.linked,a,button,[role="button"],[tabindex]:not([tabindex="-1"])';
+  cursor.className='claimiq-cursor';
+  dot.className='claimiq-cursor-dot';
+  cursor.setAttribute('aria-hidden','true');
+  dot.setAttribute('aria-hidden','true');
+  document.body.append(cursor,dot);
+  document.body.classList.add('claimiq-cursor-enabled');
+  addEventListener('pointermove',ev=>{
+    document.documentElement.style.setProperty('--cursor-x',ev.clientX+'px');
+    document.documentElement.style.setProperty('--cursor-y',ev.clientY+'px');
+    document.body.classList.add('claimiq-cursor-visible');
+    const hot=Boolean(ev.target.closest&&ev.target.closest(interactive));
+    document.body.classList.toggle('claimiq-cursor-hover',hot);
+  },{passive:true});
+  addEventListener('pointerleave',()=>document.body.classList.remove('claimiq-cursor-visible','claimiq-cursor-hover'));
+  addEventListener('pointerdown',()=>document.body.classList.add('claimiq-cursor-pressed'));
+  addEventListener('pointerup',()=>document.body.classList.remove('claimiq-cursor-pressed'));
+}
+
 /* boot */
 renderView('prototype');
+initClaimIQCursor();
 setTimeout(()=>toast('Tip: hover any box for details · click glowing nodes to zoom into their sub-system','#c084fc'),1200);
 </script>
 </body>

@@ -62,9 +62,10 @@
         </div>
       </div>
       <div class="hero-metrics" aria-label="ClaimIQ metrics">
-        <div><strong>&lt;2 min</strong><span>email to structured decision brief</span></div>
+        <div><strong>5-7 min</strong><span>email to structured decision brief</span></div>
         <div><strong>7 stages</strong><span>mail guard + router + 5 specialist agents</span></div>
         <div><strong>0.25h</strong><span>emergency clinical SLA</span></div>
+        <div><strong>0.10$</strong><span>average usage per claim</span></div>
       </div>
     </section>
 
@@ -313,7 +314,7 @@
             <div>
               <h4>ClaimIQ outcome</h4>
               <ul>
-                <li>Structured claim facts extracted from email and attachments in under two minutes.</li>
+                <li>Structured claim facts extracted from email and attachments in 5-7 minutes.</li>
                 <li>Coverage status with cited policy sections and a regulatory compliance checklist.</li>
                 <li>Deterministic fraud score, triggered SIU signals, and a recommended investigation action.</li>
                 <li>Clinical priority, colour, routing queue, SLA, and specialist recommendation.</li>
@@ -727,7 +728,7 @@
             <div>
               <h4>Python pipeline (local run)</h4>
               <ol>
-                <li>Clone the ClaimIQ repo and <code>cd</code> into the project root.</li>
+                <li>Clone the ClaimIQ hackathon repo from <a href="https://github.com/Nikhil0075/ClaimIQ_AI_Hackathon" target="_blank" rel="noopener">Nikhil0075/ClaimIQ_AI_Hackathon ↗</a> and <code>cd</code> into the project root.</li>
                 <li>Install dependencies: <code>pip install -r requirements.txt</code> (or <code>pip install -e .</code>).</li>
                 <li>Copy <code>.env.example</code> to <code>.env</code> and set <code>OPENAI_API_KEY</code>, Gmail credentials, and Google OAuth credentials path.</li>
                 <li>Deterministic smoke test (no external services): <code>python -m claimiq.pipeline.orchestrator --sample tests/sample_claim.json --pretty</code></li>
@@ -898,6 +899,10 @@
           <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">https://claimiappihackathon-0075.streamlit.app/ ↗</a>
         </p>
         <p class="small">Open the deployed Streamlit app to run the real 7-stage agentic pipeline end to end. No account or credentials are needed to explore the dashboard. If the app is asleep, click <strong>“Yes, get this app back up”</strong> and give it ~30 seconds to wake.</p>
+        <p class="reviewer-contact">
+          <span class="reviewer-contact-label">Reviewer support</span>
+          <span>If a reviewer needs a fresh link, clarification, or access help during judging, write to <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=claim.iq.ai.001%40gmail.com" target="_blank" rel="noopener">claim.iq.ai.001@gmail.com</a>.</span>
+        </p>
 
         <h3 class="access-h">Choose your review path</h3>
         <div class="path-grid">
@@ -945,7 +950,7 @@
             <div class="bundle-actions">
               <button type="button" class="bundle-btn load-scen" data-scenario="motor">▶ Load in playground</button>
               <button type="button" class="bundle-btn copy-mail" data-scenario="motor">Copy claim email</button>
-              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/1VuDtR3a5LiewqDgeSO1L_uDmx2AI1nC6?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
             </div>
           </article>
           <article class="bundle-card">
@@ -954,7 +959,7 @@
             <div class="bundle-actions">
               <button type="button" class="bundle-btn load-scen" data-scenario="health">▶ Load in playground</button>
               <button type="button" class="bundle-btn copy-mail" data-scenario="health">Copy claim email</button>
-              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/1QnIytBRtkbDEL0iiUMgej7Q5vMK_Ihnf?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
             </div>
           </article>
           <article class="bundle-card">
@@ -962,7 +967,7 @@
             <p>Health policy, prescription letter, discharge summary, itemized bill, lab &amp; MRI reports. The playground's SIU scenario is a suspicious variant of this case.</p>
             <div class="bundle-actions">
               <button type="button" class="bundle-btn load-scen" data-scenario="fraud">▶ SIU variant in playground</button>
-              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/15oSHmzdnoOcETGU9X_q8ciZ1N1ZPWXmH?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
             </div>
           </article>
           <article class="bundle-card">
@@ -971,7 +976,7 @@
             <div class="bundle-actions">
               <button type="button" class="bundle-btn load-scen" data-scenario="property">▶ Load in playground</button>
               <button type="button" class="bundle-btn copy-mail" data-scenario="property">Copy claim email</button>
-              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/1ICtYsd4CrSCGdF01tfrMCiAhXrzbFp5m?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
             </div>
           </article>
           <article class="bundle-card">
@@ -980,7 +985,7 @@
             <div class="bundle-actions">
               <button type="button" class="bundle-btn load-scen" data-scenario="travel">▶ Load in playground</button>
               <button type="button" class="bundle-btn copy-mail" data-scenario="travel">Copy claim email</button>
-              <a class="bundle-btn" href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
+              <a class="bundle-btn" href="https://drive.google.com/drive/folders/1HVOUPhUJ4KHqPRTfU2EsQEdn9ZndgK8o?usp=sharing" target="_blank" rel="noopener">Documents ↗</a>
             </div>
           </article>
         </div>
@@ -1024,7 +1029,7 @@
         <h3 class="access-h">Quick links</h3>
         <div class="quick-links">
           <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener"><b>Live Streamlit app</b><span>real 7-stage pipeline ↗</span></a>
-          <a href="https://drive.google.com/drive/folders/17udOTykHxTQTAhq3X9cQMEie2PDjgZtM?usp=sharing" target="_blank" rel="noopener"><b>Claim documents</b><span>Google Drive evidence folder ↗</span></a>
+          <a href="https://github.com/Nikhil0075/ClaimIQ_AI_Hackathon" target="_blank" rel="noopener"><b>Hackathon repo</b><span>source code and setup ↗</span></a>
           <a href="https://datastudio.google.com/reporting/cc1bb8db-5fb5-4707-b3aa-5e851aa0e06f" target="_blank" rel="noopener"><b>Looker dashboard</b><span>live claim queue &amp; SLA monitoring ↗</span></a>
           <a href="claimiq_system_map.html"><b>System map</b><span>interactive architecture</span></a>
           <a href="#documentation"><b>Documentation</b><span>searchable reference</span></a>
@@ -1036,6 +1041,7 @@
   <footer>
     <span>ClaimIQ</span>
     <a class="footer-map" href="claimiq_system_map.html">Interactive System Map ↗</a>
+    <a class="footer-map" href="https://github.com/Nikhil0075/ClaimIQ_AI_Hackathon" target="_blank" rel="noopener">GitHub Repo ↗</a>
     <span>Agentic insurance claims workflow demo</span>
   </footer>
 
