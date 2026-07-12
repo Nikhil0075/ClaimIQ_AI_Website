@@ -894,14 +894,24 @@
         <p class="section-kicker">Access instructions</p>
         <h2>Reviewer access for hackathon submission</h2>
 
-        <p class="link-box link-box-live">
-          <span class="link-box-label">Live app</span>
-          <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">https://claimiappihackathon-0075.streamlit.app/ ↗</a>
-        </p>
-        <p class="small">Open the deployed Streamlit app to run the real 7-stage agentic pipeline end to end. No account or credentials are needed to explore the dashboard. If the app is asleep, click <strong>“Yes, get this app back up”</strong> and give it ~30 seconds to wake.</p>
+        <p class="small access-lead">ClaimIQ is a live, email-driven agent. The quickest way to see it work for real: <strong>send a claim email</strong> to the intake mailbox below. The pipeline reads it automatically, replies with an instant acknowledgment and mid-run status updates, and produces an adjuster brief. No account, install, or credentials needed on your side.</p>
+
+        <div class="access-primary">
+          <p class="link-box link-box-live">
+            <span class="link-box-label">Email a claim</span>
+            <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=claim.iq.ai.001%40gmail.com" target="_blank" rel="noopener">claim.iq.ai.001@gmail.com ↗</a>
+          </p>
+          <p class="link-box link-box-live">
+            <span class="link-box-label">Live app</span>
+            <a href="https://claimiappihackathon-0075.streamlit.app/" target="_blank" rel="noopener">Streamlit dashboard ↗</a>
+          </p>
+        </div>
+
+        <p class="small">To send a live claim, grab a ready-made <strong>claim email body and attachments</strong> from the <a href="#bundles">Test-data claim bundles</a> below — paste the email as your message, attach that folder's documents, and send to <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=claim.iq.ai.001%40gmail.com" target="_blank" rel="noopener">claim.iq.ai.001@gmail.com</a>. Within ~1–2 minutes you'll get the acknowledgment reply, then the pipeline's status updates and final adjuster brief. Prefer zero setup? The Streamlit app and the on-page playground run the same scenarios instantly — no email required.</p>
+
         <p class="reviewer-contact">
           <span class="reviewer-contact-label">Reviewer support</span>
-          <span>If a reviewer needs a fresh link, clarification, or access help during judging, write to <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=claim.iq.ai.001%40gmail.com" target="_blank" rel="noopener">claim.iq.ai.001@gmail.com</a>.</span>
+          <span>Any issue during judging — a fresh link, clarification, or access help — write to <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=nikhilranjanmurmu75%40gmail.com" target="_blank" rel="noopener">nikhilranjanmurmu75@gmail.com</a>.</span>
         </p>
 
         <h3 class="access-h">Choose your review path</h3>
@@ -941,7 +951,7 @@
           </article>
         </div>
 
-        <h3 class="access-h">Test-data claim bundles — one folder per scenario</h3>
+        <h3 class="access-h" id="bundles">Test-data claim bundles — one folder per scenario</h3>
         <p class="small">Each bundle in <code>test_data/</code> contains the claim email (<code>mail.txt</code>) and its supporting documents. Copy the email for the live app, load the matching scenario in the playground, or open the documents in Drive.</p>
         <div class="bundle-grid">
           <article class="bundle-card">

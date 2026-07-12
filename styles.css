@@ -1082,6 +1082,19 @@ li { margin-bottom: 10px; }
   text-transform: uppercase;
 }
 
+.access-primary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 4px 0 2px;
+}
+
+.access-primary .link-box-live { margin: 0; }
+
+@media (max-width: 720px) {
+  .access-primary { grid-template-columns: 1fr; }
+}
+
 .link-box-live {
   display: flex;
   align-items: center;

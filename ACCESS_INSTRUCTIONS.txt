@@ -1,0 +1,38 @@
+ClaimIQ — Access Instructions (for reviewers)
+
+ClaimIQ is a live, email-driven agentic claims pipeline. No reviewer account, install, API key, or setup is required for any path below.
+
+START HERE — WEBSITE
+Open: https://nikhil0075.github.io/ClaimIQ_AI_Website/#access
+The Access section links every entry point and includes an on-page playground that runs the scenarios instantly (fully offline, zero setup).
+
+RUN A REAL CLAIM BY EMAIL (recommended)
+The pipeline reads a live inbox and processes any claim emailed to it.
+1. Send your claim email to: claim.iq.ai.001@gmail.com
+2. Fastest way to build the email: use a ready-made bundle. In the website's
+   "Test-data claim bundles — one folder per scenario" section, each scenario
+   (Motor, Health Emergency, ACL, Property Fire, Travel) gives you the exact
+   claim email body and its supporting documents. Copy the email text as your
+   message body, attach that folder's files, and send to the address above.
+3. Within ~1-2 minutes you'll receive an automated acknowledgment, then
+   mid-pipeline status updates, and a final adjuster-brief email with a PDF
+   guide and a Google Drive link to all documents.
+
+LIVE STREAMLIT DASHBOARD (no email needed)
+https://claimiappihackathon-0075.streamlit.app/
+Runs the same 7-stage pipeline with a full explainability view: per-claim
+agent outputs, fraud signal breakdown, triage colour/SLA, and the adjuster
+brief. If the app is asleep, click "Yes, get this app back up" and wait ~30s.
+
+TEST DATA / ATTACHMENTS
+Every claim email body and attachment can be downloaded from the
+"Test-data claim bundles — one folder per scenario" section on the website
+(each scenario also links its documents in a shared Google Drive folder).
+
+SUPPORT
+Any access issue during judging — a fresh link, clarification, or help —
+contact: nikhilranjanmurmu75@gmail.com
+
+NOTE
+Human approval stays mandatory on high-risk claims. The agent assists and
+never auto-approves, denies, settles, or accuses.
